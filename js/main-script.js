@@ -52,6 +52,10 @@ function createCamera() {
     perspectiveCamera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
     perspectiveCamera.position.set(10, 10, 10); // Position it off the main axes
 
+    // Mobile perspective camera
+    //mobileCamera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
+    //mobileCamera.position.set(0, 10, 0); // Position it along the length of the boom
+
     activeCamera = frontCamera;
 
     // Make sure they're pointing towards the scene
@@ -60,7 +64,7 @@ function createCamera() {
     topCamera.lookAt(scene.position);
     orthographicCamera.lookAt(scene.position);
     perspectiveCamera.lookAt(scene.position);
-
+    //mobileCamera.lookAt(new THREE.Vector3(0, 0, 0)); // Orient it to look directly over the xOz plane
 }
 
 
@@ -171,6 +175,9 @@ function onKeyDown(e) {
         case 53: //5
             activeCamera = perspectiveCamera;
             break;
+        /*case 54: //6
+            activeCamera = mobileCamera;
+            break; */
     }
 }
 
