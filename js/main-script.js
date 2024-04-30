@@ -19,6 +19,8 @@ var towerGeometry, towerMaterial, towerMesh;
 
 var topTowerGeometry, topTowerMaterial, topTowerMesh;
 var cabinGeometry, cabinMaterial, cabinMesh;
+var basePeakGeometry, basePeakMaterial, basePeakMesh;
+var sidesGeometry, sidesMaterial, sidesMesh;
 var boomGeometry, boomMaterial, boomMesh;
 var counterBoomGeometry, counterBoomMaterial, counterBoomMesh;
 var counterweightGeometry, counterweightMaterial, counterweightMesh;
@@ -109,7 +111,7 @@ function createCraneBase(obj, x, y, z){
 function createCraneTower(obj, x, y, z){
     'use strict';
 
-    towerGeometry = new THREE.BoxGeometry(5, 70, 5);
+    towerGeometry = new THREE.BoxGeometry(5, 60, 5);
     towerMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true });
     towerMesh = new THREE.Mesh(towerGeometry, towerMaterial);
 
@@ -123,7 +125,7 @@ function createLowerCrane(obj, x, y, z){
     lowerCrane = new THREE.Object3D();
 
     createCraneBase(crane, x, y, z);
-    createCraneTower(crane, x, y + 36, z);
+    createCraneTower(crane, x, y + 31, z);
     
     obj.add(lowerCrane);
 }
@@ -132,14 +134,38 @@ function createLowerCrane(obj, x, y, z){
 function createTopTower(obj, x, y, z){
     'use strict';
 
-    // Create a tetrahedron with a radius of 3 and detail of 0
-    topTowerGeometry = new THREE.TetrahedronGeometry(5, 0);
+    topTowerGeometry = new THREE.BoxGeometry(5, 3, 5);
     topTowerMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true });
     topTowerMesh = new THREE.Mesh(topTowerGeometry, topTowerMaterial);
 
-    topTowerMesh.position.set(x, y, z);
+    topTowerMesh.position.set(x, y - 10, z);
 
     obj.add(topTowerMesh);
+}
+function createPeak(obj, x, y, z){
+
+    'use strict';
+
+    // Create a box for the base of the pyramid
+    basePeakGeometry = new THREE.BoxGeometry(5, 0.1, 5);
+    basePeakMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true });
+    basePeakMesh = new THREE.Mesh(basePeakGeometry, basePeakMaterial);
+
+    basePeakMesh.position.set(x, y - 8.5, z);
+
+    obj.add(basePeakMesh);
+
+    // Create a cylinder for the sides of the pyramid
+    sidesGeometry = new THREE.CylinderGeometry(0, 5 / Math.sqrt(2), 10, 4);
+    sidesMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true });
+    sidesMesh = new THREE.Mesh(sidesGeometry, sidesMaterial);
+
+    sidesMesh.position.set(x, y - 3.5, z);
+
+    // Rotate the sidesMesh by 45 degrees around the Y axis
+    sidesMesh.rotation.y = Math.PI / 4;
+
+    obj.add(sidesMesh);
 }
 
 function createUpperCrane(obj, x, y, z){
@@ -147,6 +173,7 @@ function createUpperCrane(obj, x, y, z){
     upperCrane = new THREE.Object3D();
 
     createTopTower(upperCrane, x, y, z);
+    createPeak(upperCrane, x, y, z);
 
     obj.add(upperCrane);
 }
@@ -191,6 +218,8 @@ function handleCollisions(){
 function update(){
     'use strict';
 
+    //upperCrane.rotation.y += 0.01;
+
 }
 
 /////////////
@@ -228,9 +257,12 @@ function init() {
 /////////////////////
 function animate() {
     'use strict';
-    render();
 
     requestAnimationFrame(animate);
+
+    update();
+
+    render();
 }
 
 ////////////////////////////
