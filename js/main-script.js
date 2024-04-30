@@ -215,6 +215,11 @@ function onKeyDown(e) {
     switch (e.keyCode) {
         case 49: //1
             activeCamera = frontCamera;
+            scene.traverse(function (node) {
+                if (node instanceof THREE.Mesh) {
+                    node.material.wireframe = !node.material.wireframe;
+                }
+            });
             break;
         case 50: //2
             activeCamera = sideCamera;
