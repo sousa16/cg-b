@@ -59,7 +59,7 @@ function createCamera() {
 
     // Top camera
     topCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
-    topCamera.position.y = 10;
+    topCamera.position.y = 100;
 
     // Orthographic camera
     orthographicCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
