@@ -10,8 +10,19 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 
 var camera, scene, renderer;
-var geometry, material, mesh;
 var activeCamera, frontCamera, sideCamera, topCamera, orthographicCamera, perspectiveCamera, mobileCamera;
+var crane, craneMaterial;
+var baseGeometry, baseMaterial, baseMesh;
+var towerGeometry, towerMesh;
+var boomGeometry, boomMaterial, boomMesh;
+var counterBoomGeometry, counterBoomMaterial, counterBoomMesh;
+var counterweightGeometry, counterweightMaterial, counterweightMesh;
+var hoistRopeGeometry, hoistRopeMaterial, hoistRopeMesh;
+var counterHoistRopeGeometry, counterHoistRopeMaterial, counterHoistRopeMesh;
+var cabinGeometry, cabinMaterial, cabinMesh;
+var trolleyGeometry, trolleyMaterial, trolleyMesh;
+var cableGeometry, cableMaterial, cableMesh;
+var hookGeometry, hookMaterial, hookMesh;
 
 /////////////////////
 /* CREATE SCENE(S) */
@@ -20,7 +31,9 @@ function createScene(){
     'use strict';
 
     scene = new THREE.Scene();
-    scene.add(new THREE.AxesHelper(100));
+    scene.add(new THREE.AxesHelper(10));
+
+    createCrane(0, 0, 0);
 
 }
 
@@ -33,24 +46,24 @@ function createCamera() {
     var aspectRatio = window.innerWidth / window.innerHeight;
 
     // Frontal camera
-    frontCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
+    frontCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
     frontCamera.position.z = 10;    
 
     // Side camera
-    sideCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
+    sideCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
     sideCamera.position.x = 10;
 
     // Top camera
-    topCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
+    topCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
     topCamera.position.y = 10;
 
     // Orthographic camera
-    orthographicCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
-    orthographicCamera.position.set(10, 10, 10); // Position it off the main axes
+    orthographicCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
+    orthographicCamera.position.set(100, 100, 100); // Position it off the main axes
 
     // Perspective camera
     perspectiveCamera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
-    perspectiveCamera.position.set(10, 10, 10); // Position it off the main axes
+    perspectiveCamera.position.set(100, 100, 100); // Position it off the main axes
 
     // Mobile perspective camera
     //mobileCamera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
@@ -75,6 +88,33 @@ function createCamera() {
 ////////////////////////
 /* CREATE OBJECT3D(S) */
 ////////////////////////
+
+function createCraneBase(obj, x, y, z){
+    'use strict';
+
+    baseGeometry = new THREE.BoxGeometry(10, 2, 10);
+    baseMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true });
+    baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
+
+    baseMesh.position.set(x, y, z);
+
+    obj.add(baseMesh);
+}
+
+function createCrane(x, y, z) {
+    'use strict';
+
+    crane = new THREE.Object3D();
+    craneMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true });
+
+    createCraneBase(crane, 0, 0, 0);
+
+    scene.add(crane);
+
+    crane.position.x = x;
+    crane.position.y = y;
+    crane.position.z = z;
+}
 
 //////////////////////
 /* CHECK COLLISIONS */
@@ -136,6 +176,7 @@ function init() {
 function animate() {
     'use strict';
     render();
+
     requestAnimationFrame(animate);
 }
 
