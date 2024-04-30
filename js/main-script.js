@@ -9,17 +9,21 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 //////////////////////
 
 
-var camera, scene, renderer;
+var camera, scene, renderer, aspectRatio;
 var activeCamera, frontCamera, sideCamera, topCamera, orthographicCamera, perspectiveCamera, mobileCamera;
-var crane, craneMaterial;
+
+var crane, lowerCrane, upperCrane;
+
 var baseGeometry, baseMaterial, baseMesh;
-var towerGeometry, towerMesh;
+var towerGeometry, towerMaterial, towerMesh;
+
+var topTowerGeometry, topTowerMaterial, topTowerMesh;
+var cabinGeometry, cabinMaterial, cabinMesh;
 var boomGeometry, boomMaterial, boomMesh;
 var counterBoomGeometry, counterBoomMaterial, counterBoomMesh;
 var counterweightGeometry, counterweightMaterial, counterweightMesh;
 var hoistRopeGeometry, hoistRopeMaterial, hoistRopeMesh;
 var counterHoistRopeGeometry, counterHoistRopeMaterial, counterHoistRopeMesh;
-var cabinGeometry, cabinMaterial, cabinMesh;
 var trolleyGeometry, trolleyMaterial, trolleyMesh;
 var cableGeometry, cableMaterial, cableMesh;
 var hookGeometry, hookMaterial, hookMesh;
@@ -43,7 +47,7 @@ function createScene(){
 function createCamera() {
     'use strict';
 
-    var aspectRatio = window.innerWidth / window.innerHeight;
+    aspectRatio = window.innerWidth / window.innerHeight;
 
     // Frontal camera
     frontCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
@@ -89,6 +93,7 @@ function createCamera() {
 /* CREATE OBJECT3D(S) */
 ////////////////////////
 
+// Lower crane definitions
 function createCraneBase(obj, x, y, z){
     'use strict';
 
@@ -105,21 +110,57 @@ function createCraneTower(obj, x, y, z){
     'use strict';
 
     towerGeometry = new THREE.BoxGeometry(5, 70, 5);
-    towerMesh = new THREE.Mesh(towerGeometry, craneMaterial);
+    towerMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true });
+    towerMesh = new THREE.Mesh(towerGeometry, towerMaterial);
 
     towerMesh.position.set(x, y, z);
 
     obj.add(towerMesh);
 }
 
+function createLowerCrane(obj, x, y, z){
+    'use strict';
+    lowerCrane = new THREE.Object3D();
+
+    createCraneBase(crane, x, y, z);
+    createCraneTower(crane, x, y + 36, z);
+    
+    obj.add(lowerCrane);
+}
+
+// Upper crane definitions
+function createTopTower(obj, x, y, z){
+    'use strict';
+
+    // Create a tetrahedron with a radius of 3 and detail of 0
+    topTowerGeometry = new THREE.TetrahedronGeometry(5, 0);
+    topTowerMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true });
+    topTowerMesh = new THREE.Mesh(topTowerGeometry, topTowerMaterial);
+
+    topTowerMesh.position.set(x, y, z);
+
+    obj.add(topTowerMesh);
+}
+
+function createUpperCrane(obj, x, y, z){
+    'use strict';
+    upperCrane = new THREE.Object3D();
+
+    createTopTower(upperCrane, x, y, z);
+
+    obj.add(upperCrane);
+}
+
 function createCrane(x, y, z) {
     'use strict';
 
     crane = new THREE.Object3D();
-    craneMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true });
 
-    createCraneBase(crane, 0, 0, 0);
-    createCraneTower(crane, 0, 36, 0);
+    createLowerCrane(crane, 0, 0, 0);
+    createUpperCrane(crane, 0, 72, 0);
+
+    crane.add(lowerCrane);
+    crane.add(upperCrane);
 
     scene.add(crane);
 
