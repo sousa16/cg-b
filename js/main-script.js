@@ -98,7 +98,7 @@ function createCraneBase(obj, x, y, z){
     'use strict';
 
     baseGeometry = new THREE.BoxGeometry(10, 2, 10);
-    baseMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true });
+    baseMaterial = new THREE.MeshBasicMaterial({ color: 0x444745, wireframe: true });
     baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
 
     baseMesh.position.set(x, y, z);
@@ -110,7 +110,7 @@ function createCraneTower(obj, x, y, z){
     'use strict';
 
     towerGeometry = new THREE.BoxGeometry(5, 70, 5);
-    towerMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true });
+    towerMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true });
     towerMesh = new THREE.Mesh(towerGeometry, towerMaterial);
 
     towerMesh.position.set(x, y, z);
@@ -134,7 +134,7 @@ function createTopTower(obj, x, y, z){
 
     // Create a tetrahedron with a radius of 3 and detail of 0
     topTowerGeometry = new THREE.TetrahedronGeometry(5, 0);
-    topTowerMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true });
+    topTowerMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true });
     topTowerMesh = new THREE.Mesh(topTowerGeometry, topTowerMaterial);
 
     topTowerMesh.position.set(x, y, z);
