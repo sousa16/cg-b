@@ -101,6 +101,17 @@ function createCraneBase(obj, x, y, z){
     obj.add(baseMesh);
 }
 
+function createCraneTower(obj, x, y, z){
+    'use strict';
+
+    towerGeometry = new THREE.BoxGeometry(5, 70, 5);
+    towerMesh = new THREE.Mesh(towerGeometry, craneMaterial);
+
+    towerMesh.position.set(x, y, z);
+
+    obj.add(towerMesh);
+}
+
 function createCrane(x, y, z) {
     'use strict';
 
@@ -108,6 +119,7 @@ function createCrane(x, y, z) {
     craneMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true });
 
     createCraneBase(crane, 0, 0, 0);
+    createCraneTower(crane, 0, 36, 0);
 
     scene.add(crane);
 
