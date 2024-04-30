@@ -11,7 +11,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 var camera, scene, renderer;
 var geometry, material, mesh;
-var activeCamera, frontCamera, sideCamera, topCamera;
+var activeCamera, frontCamera, sideCamera, topCamera, orthographicCamera, perspectiveCamera, mobileCamera;
 
 /////////////////////
 /* CREATE SCENE(S) */
@@ -44,12 +44,23 @@ function createCamera() {
     topCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
     topCamera.position.y = 10;
 
+    // Orthographic camera
+    orthographicCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
+    orthographicCamera.position.set(10, 10, 10); // Position it off the main axes
+
+    // Perspective camera
+    perspectiveCamera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
+    perspectiveCamera.position.set(10, 10, 10); // Position it off the main axes
+
     activeCamera = frontCamera;
 
     // Make sure they're pointing towards the scene
     frontCamera.lookAt(scene.position);
     sideCamera.lookAt(scene.position);
     topCamera.lookAt(scene.position);
+    orthographicCamera.lookAt(scene.position);
+    perspectiveCamera.lookAt(scene.position);
+
 }
 
 
@@ -153,6 +164,12 @@ function onKeyDown(e) {
             break;
         case 51: //3
             activeCamera = topCamera;
+            break;
+        case 52: //4
+            activeCamera = orthographicCamera;
+            break;
+        case 53: //5
+            activeCamera = perspectiveCamera;
             break;
     }
 }
