@@ -23,6 +23,12 @@ function createScene(){
 	scene.background = new THREE.Color(0x000000);
     scene.add(new THREE.AxesHelper(100));
 
+	createContainer(0, 0, 70);
+	createCubeLoad(30, 10, 50);
+	createDodecahedronLoad(25, 10, 30);
+	createIcosahedronLoad(50, 10, 10);
+	createTorusLoad(60, 10, 65);
+
 }
 
 //////////////////////
@@ -34,24 +40,24 @@ function createCamera() {
     var aspectRatio = window.innerWidth / window.innerHeight;
 
     // Frontal camera
-    frontCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
-    frontCamera.position.z = 10;
+    frontCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
+    frontCamera.position.z = 200;
 
     // Side camera
-    sideCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
-    sideCamera.position.x = 10;
+    sideCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
+    sideCamera.position.x = 100;
 
     // Top camera
-    topCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
-    topCamera.position.y = 10;
+    topCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
+    topCamera.position.y = 100;
 
     // Orthographic camera
-    orthographicCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
-    orthographicCamera.position.set(10, 10, 10); // Position it off the main axes
+    orthographicCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
+    orthographicCamera.position.set(100, 100, 100); // Position it off the main axes
 
     // Perspective camera
     perspectiveCamera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
-    perspectiveCamera.position.set(10, 10, 10); // Position it off the main axes
+    perspectiveCamera.position.set(100, 100, 100); // Position it off the main axes
 
     // Mobile perspective camera
     //mobileCamera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
@@ -76,6 +82,100 @@ function createCamera() {
 ////////////////////////
 /* CREATE OBJECT3D(S) */
 ////////////////////////
+
+/*========================= CREATE OBJET CONTAINER===================================*/
+function addBase(obj, x, y, z){
+	'use strict';
+
+    geometry = new THREE.BoxGeometry(30, 0, 45);
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y , z);
+    obj.add(mesh);
+}
+function addBigWall(obj, x, y, z){
+	'use strict';
+
+    geometry = new THREE.BoxGeometry(0, 30, 45);
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y, z);
+    obj.add(mesh);
+}
+function addSmallWall(obj, x, y, z){
+	'use strict';
+
+    geometry = new THREE.BoxGeometry(30, 30, 0);
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y, z);
+    obj.add(mesh);
+}
+
+
+function createContainer(x, y, z) {
+    'use strict';
+
+	var container = new THREE.Object3D();
+
+    //material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+
+	material = [
+		new THREE.MeshBasicMaterial({ color: 0xff0000 }), // Vermelho para a face frontal
+        new THREE.MeshBasicMaterial({ color: 0x00ff00 }), // Verde para a face traseira
+        new THREE.MeshBasicMaterial({ color: 0x0000ff }), // Azul para a face superior
+        new THREE.MeshBasicMaterial({ color: 0xffff00 }), // Amarelo para a face inferior
+        new THREE.MeshBasicMaterial({ color: 0x00ffff })  // Ciano para a face esquerda
+    ]
+
+
+	addBase(container, 0,  0,  0);
+	addBigWall(container, 15,  15,  0);
+	addBigWall(container, -15,  15,  0);
+	addSmallWall(container, 0,  15,  22.5);
+	addSmallWall(container, 0,  15,  -22.5);
+
+	scene.add(container);
+
+    container.position.x = x;
+    container.position.y = y;
+    container.position.z = z;
+}
+
+/*========================= CREATE OBJET LOADS===================================*/
+function createCubeLoad(x, y, z){
+	'use strict';
+
+	geometry = new THREE.BoxGeometry(10, 10, 10);
+	material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y / 2, z);
+    scene.add(mesh);
+}
+function createDodecahedronLoad(x, y, z) {
+    'use strict';
+
+    var geometry = new THREE.DodecahedronGeometry(5);
+    var material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+    var mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y / 2, z);
+    scene.add(mesh);
+}
+function createIcosahedronLoad(x, y, z) {
+    'use strict';
+
+    var geometry = new THREE.IcosahedronGeometry(5);
+    var material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+    var mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y / 2, z);
+    scene.add(mesh);
+}
+function createTorusLoad(x, y, z) {
+    'use strict';
+
+    var geometry = new THREE.TorusGeometry(5, 2);
+    var material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+    var mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y / 2, z);
+    scene.add(mesh);
+}
 
 //////////////////////
 /* CHECK COLLISIONS */
