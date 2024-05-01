@@ -20,6 +20,7 @@ function createScene(){
     'use strict';
 
     scene = new THREE.Scene();
+	scene.background = new THREE.Color(0x000000);
     scene.add(new THREE.AxesHelper(100));
 
 }
@@ -34,7 +35,7 @@ function createCamera() {
 
     // Frontal camera
     frontCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
-    frontCamera.position.z = 10;    
+    frontCamera.position.z = 10;
 
     // Side camera
     sideCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
@@ -142,7 +143,7 @@ function animate() {
 ////////////////////////////
 /* RESIZE WINDOW CALLBACK */
 ////////////////////////////
-function onResize() { 
+function onResize() {
     'use strict';
 
     renderer.setSize(window.innerWidth, window.innerHeight);
