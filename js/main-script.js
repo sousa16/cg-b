@@ -24,10 +24,11 @@ function createScene(){
     scene.add(new THREE.AxesHelper(100));
 
 	createContainer(0, 0, 70);
-	createCubeLoad(30, 10, 50);
+	createCubeLoad(30, 15, 50);
 	createDodecahedronLoad(25, 10, 30);
 	createIcosahedronLoad(50, 10, 10);
 	createTorusLoad(60, 10, 65);
+	createTorusKnotLoad(70, 9.5, 40);
 
 }
 
@@ -95,7 +96,7 @@ function addBase(obj, x, y, z){
 function addBigWall(obj, x, y, z){
 	'use strict';
 
-    geometry = new THREE.BoxGeometry(0, 30, 45);
+    geometry = new THREE.BoxGeometry(4, 30, 45);
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     obj.add(mesh);
@@ -103,7 +104,7 @@ function addBigWall(obj, x, y, z){
 function addSmallWall(obj, x, y, z){
 	'use strict';
 
-    geometry = new THREE.BoxGeometry(30, 30, 0);
+    geometry = new THREE.BoxGeometry(38, 30, 4);
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     obj.add(mesh);
@@ -127,10 +128,10 @@ function createContainer(x, y, z) {
 
 
 	addBase(container, 0,  0,  0);
-	addBigWall(container, 15,  15,  0);
-	addBigWall(container, -15,  15,  0);
-	addSmallWall(container, 0,  15,  22.5);
-	addSmallWall(container, 0,  15,  -22.5);
+	addBigWall(container, 17,  15,  0);
+	addBigWall(container, -17,  15,  0);
+	addSmallWall(container, 0,  15,  24.5);
+	addSmallWall(container, 0,  15,  -24.5);
 
 	scene.add(container);
 
@@ -143,7 +144,7 @@ function createContainer(x, y, z) {
 function createCubeLoad(x, y, z){
 	'use strict';
 
-	geometry = new THREE.BoxGeometry(10, 10, 10);
+	geometry = new THREE.BoxGeometry(15, 15, 15);
 	material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y / 2, z);
@@ -161,19 +162,28 @@ function createDodecahedronLoad(x, y, z) {
 function createIcosahedronLoad(x, y, z) {
     'use strict';
 
-    var geometry = new THREE.IcosahedronGeometry(5);
+    var geometry = new THREE.IcosahedronGeometry(12);
     var material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
     var mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y / 2, z);
+    mesh.position.set(x, y , z);
     scene.add(mesh);
 }
 function createTorusLoad(x, y, z) {
     'use strict';
 
-    var geometry = new THREE.TorusGeometry(5, 2);
+    var geometry = new THREE.TorusGeometry(8, 2);
     var material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
     var mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y / 2, z);
+    mesh.position.set(x, y , z);
+    scene.add(mesh);
+}
+function createTorusKnotLoad(x, y, z) {
+    'use strict';
+
+    var geometry = new THREE.TorusKnotGeometry(6, 1, 64, 8, 2, 3);
+    var material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+    var mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y , z);
     scene.add(mesh);
 }
 
