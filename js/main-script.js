@@ -12,23 +12,31 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 var camera, scene, renderer, aspectRatio;
 var activeCamera, frontCamera, sideCamera, topCamera, orthographicCamera, perspectiveCamera, mobileCamera;
 
+var materials;
 var crane, lowerCrane, upperCrane;
 
-var baseGeometry, baseMaterial, baseMesh;
-var towerGeometry, towerMaterial, towerMesh;
+var baseGeometry, baseMesh;
+var towerGeometry, towerMesh;
 
-var topTowerGeometry, topTowerMaterial, topTowerMesh;
-var cabinGeometry, cabinMaterial, cabinMesh;
-var basePeakGeometry, basePeakMaterial, basePeakMesh;
-var sidesGeometry, sidesMaterial, sidesMesh;
-var boomGeometry, boomMaterial, boomMesh;
-var counterBoomGeometry, counterBoomMaterial, counterBoomMesh;
-var counterweightGeometry, counterweightMaterial, counterweightMesh;
-var hoistRopeGeometry, hoistRopeMaterial, hoistRopeMesh;
-var counterHoistRopeGeometry, counterHoistRopeMaterial, counterHoistRopeMesh;
-var trolleyGeometry, trolleyMaterial, trolleyMesh;
-var cableGeometry, cableMaterial, cableMesh;
-var hookGeometry, hookMaterial, hookMesh;
+var topTowerGeometry, topTowerMesh;
+var cabinGeometry, cabinMesh;
+var basePeakGeometry, basePeakMesh;
+var sidesGeometry, sidesMesh;
+var boomGeometry, boomMesh;
+var counterBoomGeometry, counterBoomMesh;
+var counterweightGeometry, counterweightMesh;
+var hoistRopeGeometry, hoistRopeMesh;
+var counterHoistRopeGeometry, counterHoistRopeMesh;
+var trolleyGeometry, trolleyMesh;
+var cableGeometry, cableMesh;
+var hookGeometry, hookMesh;
+
+var materials = {
+    "dark grey": new THREE.MeshBasicMaterial({ color: 0x444745, wireframe: true }),
+    "white": new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true }),
+    "yellow": new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true }),
+    "transparent": new THREE.MeshBasicMaterial({ color: 0x87CEFA, opacity: 0.5, transparent: true }),
+}
 
 /////////////////////
 /* CREATE SCENE(S) */
@@ -100,8 +108,7 @@ function createCraneBase(obj, x, y, z){
     'use strict';
 
     baseGeometry = new THREE.BoxGeometry(10, 2, 10);
-    baseMaterial = new THREE.MeshBasicMaterial({ color: 0x444745, wireframe: true });
-    baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
+    baseMesh = new THREE.Mesh(baseGeometry, materials["dark grey"]);
 
     baseMesh.position.set(x, y, z);
 
@@ -112,8 +119,7 @@ function createCraneTower(obj, x, y, z){
     'use strict';
 
     towerGeometry = new THREE.BoxGeometry(5, 60, 5);
-    towerMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true });
-    towerMesh = new THREE.Mesh(towerGeometry, towerMaterial);
+    towerMesh = new THREE.Mesh(towerGeometry, materials["yellow"]);
 
     towerMesh.position.set(x, y, z);
 
@@ -135,8 +141,7 @@ function createTopTower(obj, x, y, z){
     'use strict';
 
     topTowerGeometry = new THREE.BoxGeometry(5, 3, 5);
-    topTowerMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true });
-    topTowerMesh = new THREE.Mesh(topTowerGeometry, topTowerMaterial);
+    topTowerMesh = new THREE.Mesh(topTowerGeometry, materials["yellow"]);
 
     topTowerMesh.position.set(x, y - 10, z);
 
@@ -148,8 +153,7 @@ function createPeak(obj, x, y, z){
 
     // Create a box for the base of the pyramid
     basePeakGeometry = new THREE.BoxGeometry(5, 0.1, 5);
-    basePeakMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true });
-    basePeakMesh = new THREE.Mesh(basePeakGeometry, basePeakMaterial);
+    basePeakMesh = new THREE.Mesh(basePeakGeometry, materials["yellow"]);
 
     basePeakMesh.position.set(x, y - 8.5, z);
 
@@ -157,8 +161,7 @@ function createPeak(obj, x, y, z){
 
     // Create a cylinder for the sides of the pyramid
     sidesGeometry = new THREE.CylinderGeometry(0, 5 / Math.sqrt(2), 10, 4);
-    sidesMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true });
-    sidesMesh = new THREE.Mesh(sidesGeometry, sidesMaterial);
+    sidesMesh = new THREE.Mesh(sidesGeometry, materials["yellow"]);
 
     sidesMesh.position.set(x, y - 3.5, z);
 
@@ -172,8 +175,7 @@ function createCabin(obj, x, y, z){
     'use strict';
 
     cabinGeometry = new THREE.BoxGeometry(5, 3, 3);
-    cabinMaterial = new THREE.MeshBasicMaterial({ color: 0x87CEFA, opacity: 0.5, transparent: true });
-    cabinMesh = new THREE.Mesh(cabinGeometry, cabinMaterial);
+    cabinMesh = new THREE.Mesh(cabinGeometry, materials["transparent"]);
 
     // Position the cabin as a part of the upperCrane
     cabinMesh.position.set(x, y - 10, z + 4);
@@ -185,8 +187,7 @@ function createBoom(obj, x, y, z){
     'use strict';
 
     boomGeometry = new THREE.BoxGeometry(5, 50, 3);
-    boomMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true });
-    boomMesh = new THREE.Mesh(boomGeometry, boomMaterial);
+    boomMesh = new THREE.Mesh(boomGeometry, materials["yellow"]);
 
     // Position the boom above the cabin and rotate it 
     boomMesh.position.set(x + 27.5, y - 10, z);
@@ -200,8 +201,7 @@ function createCounterBoom(obj, x, y, z){
     'use strict';
 
     counterBoomGeometry = new THREE.BoxGeometry(5, 20, 3);
-    counterBoomMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true });
-    counterBoomMesh = new THREE.Mesh(counterBoomGeometry, counterBoomMaterial);
+    counterBoomMesh = new THREE.Mesh(counterBoomGeometry, materials["yellow"]);
 
     // Position the counterBoom above the cabin and rotate it 
     counterBoomMesh.position.set(x - 12.5, y - 10, z);
@@ -352,11 +352,11 @@ function onKeyDown(e) {
             activeCamera = mobileCamera;
             break; */
         case 55: //7
-            scene.traverse(function (node) {
-                if (node instanceof THREE.Mesh) {
-                    node.material.wireframe = !node.material.wireframe;
+            for (var key in materials) {
+                if (materials.hasOwnProperty(key)) {
+                    materials[key].wireframe = !materials[key].wireframe;
                 }
-            });
+            }
             break;
         case 81: // q for crane rotation
             upperCrane.rotation.y += 0.1;
