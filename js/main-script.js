@@ -37,7 +37,7 @@ var materials = {
     "yellow": new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true }),
     "transparent": new THREE.MeshBasicMaterial({ color: 0x87CEFA, opacity: 0.5, transparent: true }),
 }
-
+        
 /////////////////////
 /* CREATE SCENE(S) */
 /////////////////////
@@ -230,6 +230,25 @@ function createCounterWeight(obj, x, y, z){
     obj.add(counterweightMesh);
 }
 
+function createHoistRope(obj, x, y, z) {
+    'use strict';
+
+    // Create a cylinder geometry for the hoist rope
+    hoistRopeGeometry = new THREE.CylinderGeometry(0.1, 0.1, 50, 32);
+
+    // Create a mesh with the geometry and material
+    hoistRopeMesh = new THREE.Mesh(hoistRopeGeometry, materials["dark grey"]);
+
+    // Position the hoist rope at the midpoint between the peak and the end of the boom
+    hoistRopeMesh.position.set(x, y - 3.5, z);
+
+    // Rotate the hoist rope to point from the peak to the end of the boom
+    hoistRopeMesh.lookAt(x + 50, y - 10, z);
+
+    // Add the hoist rope to upperCrane
+    obj.add(hoistRopeMesh);
+}
+
 function createUpperCrane(obj, x, y, z){
     'use strict';
     upperCrane = new THREE.Object3D();
@@ -240,6 +259,7 @@ function createUpperCrane(obj, x, y, z){
     createBoom(upperCrane, x, y, z);
     createCounterBoom(upperCrane, x, y, z);
     createCounterWeight(upperCrane, x, y, z);
+    createHoistRope(upperCrane, x, y, z);
     
     obj.add(upperCrane);
 }
