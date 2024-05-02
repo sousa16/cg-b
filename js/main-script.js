@@ -68,11 +68,11 @@ function createCamera() {
 
     // Frontal camera
     frontCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
-    frontCamera.position.z = 10;    
+    frontCamera.position.z = 100;    
 
     // Side camera
     sideCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
-    sideCamera.position.x = 10;
+    sideCamera.position.x = 100;
 
     // Top camera
     topCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
