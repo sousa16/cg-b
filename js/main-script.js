@@ -250,28 +250,28 @@ function createCrane(x, y, z) {
     crane.position.z = z;
 }
 
-/*========================= CREATE OBJET CONTAINER===================================*/
+/*========================= CREATE OBJECT CONTAINER===================================*/
 function addBase(obj, x, y, z){
 	'use strict';
 
-    geometry = new THREE.BoxGeometry(30, 0, 45);
-    mesh = new THREE.Mesh(geometry, material);
+    var geometry = new THREE.BoxGeometry(30, 0, 45);
+    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
     mesh.position.set(x, y , z);
     obj.add(mesh);
 }
 function addBigWall(obj, x, y, z){
 	'use strict';
 
-    geometry = new THREE.BoxGeometry(4, 30, 45);
-    mesh = new THREE.Mesh(geometry, material);
+    var geometry = new THREE.BoxGeometry(4, 30, 45);
+    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
     mesh.position.set(x, y, z);
     obj.add(mesh);
 }
 function addSmallWall(obj, x, y, z){
 	'use strict';
 
-    geometry = new THREE.BoxGeometry(38, 30, 4);
-    mesh = new THREE.Mesh(geometry, material);
+    var geometry = new THREE.BoxGeometry(38, 30, 4);
+    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
     mesh.position.set(x, y, z);
     obj.add(mesh);
 }
@@ -281,17 +281,6 @@ function createContainer(x, y, z) {
     'use strict';
 
 	var container = new THREE.Object3D();
-
-    //material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-
-	material = [
-		new THREE.MeshBasicMaterial({ color: 0xff0000 }), // Vermelho para a face frontal
-        new THREE.MeshBasicMaterial({ color: 0x00ff00 }), // Verde para a face traseira
-        new THREE.MeshBasicMaterial({ color: 0x0000ff }), // Azul para a face superior
-        new THREE.MeshBasicMaterial({ color: 0xffff00 }), // Amarelo para a face inferior
-        new THREE.MeshBasicMaterial({ color: 0x00ffff })  // Ciano para a face esquerda
-    ]
-
 
 	addBase(container, 0,  0,  0);
 	addBigWall(container, 17,  15,  0);
@@ -306,13 +295,12 @@ function createContainer(x, y, z) {
     container.position.z = z;
 }
 
-/*========================= CREATE OBJET LOADS===================================*/
+/*========================= CREATE OBJECT LOADS===================================*/
 function createCubeLoad(x, y, z){
 	'use strict';
 
-	geometry = new THREE.BoxGeometry(15, 15, 15);
-	material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-    mesh = new THREE.Mesh(geometry, material);
+	var geometry = new THREE.BoxGeometry(15, 15, 15);
+    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
     mesh.position.set(x, y / 2, z);
     scene.add(mesh);
 }
@@ -320,8 +308,7 @@ function createDodecahedronLoad(x, y, z) {
     'use strict';
 
     var geometry = new THREE.DodecahedronGeometry(5);
-    var material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-    var mesh = new THREE.Mesh(geometry, material);
+    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
     mesh.position.set(x, y / 2, z);
     scene.add(mesh);
 }
@@ -329,8 +316,7 @@ function createIcosahedronLoad(x, y, z) {
     'use strict';
 
     var geometry = new THREE.IcosahedronGeometry(12);
-    var material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-    var mesh = new THREE.Mesh(geometry, material);
+    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
     mesh.position.set(x, y , z);
     scene.add(mesh);
 }
@@ -338,8 +324,7 @@ function createTorusLoad(x, y, z) {
     'use strict';
 
     var geometry = new THREE.TorusGeometry(8, 2);
-    var material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-    var mesh = new THREE.Mesh(geometry, material);
+    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
     mesh.position.set(x, y , z);
     scene.add(mesh);
 }
@@ -347,8 +332,7 @@ function createTorusKnotLoad(x, y, z) {
     'use strict';
 
     var geometry = new THREE.TorusKnotGeometry(6, 1, 64, 8, 2, 3);
-    var material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-    var mesh = new THREE.Mesh(geometry, material);
+    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
     mesh.position.set(x, y , z);
     scene.add(mesh);
 }
