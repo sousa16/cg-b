@@ -335,11 +335,6 @@ function onKeyDown(e) {
     switch (e.keyCode) {
         case 49: //1
             activeCamera = frontCamera;
-            scene.traverse(function (node) {
-                if (node instanceof THREE.Mesh) {
-                    node.material.wireframe = !node.material.wireframe;
-                }
-            });
             break;
         case 50: //2
             activeCamera = sideCamera;
@@ -356,6 +351,13 @@ function onKeyDown(e) {
         /*case 54: //6
             activeCamera = mobileCamera;
             break; */
+        case 55: //7
+            scene.traverse(function (node) {
+                if (node instanceof THREE.Mesh) {
+                    node.material.wireframe = !node.material.wireframe;
+                }
+            });
+            break;
         case 81: // q for crane rotation
             upperCrane.rotation.y += 0.1;
             break;
