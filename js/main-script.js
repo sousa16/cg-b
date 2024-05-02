@@ -9,9 +9,34 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 //////////////////////
 
 
-var camera, scene, renderer;
-var geometry, material, mesh;
+var camera, scene, renderer, aspectRatio;
 var activeCamera, frontCamera, sideCamera, topCamera, orthographicCamera, perspectiveCamera, mobileCamera;
+
+var materials;
+var crane, lowerCrane, upperCrane;
+
+var baseGeometry, baseMesh;
+var towerGeometry, towerMesh;
+
+var topTowerGeometry, topTowerMesh;
+var cabinGeometry, cabinMesh;
+var basePeakGeometry, basePeakMesh;
+var sidesGeometry, sidesMesh;
+var boomGeometry, boomMesh;
+var counterBoomGeometry, counterBoomMesh;
+var counterweightGeometry, counterweightMesh;
+var hoistRopeGeometry, hoistRopeMesh;
+var counterHoistRopeGeometry, counterHoistRopeMesh;
+var trolleyGeometry, trolleyMesh;
+var cableGeometry, cableMesh;
+var hookGeometry, hookMesh;
+
+var materials = {
+    "dark grey": new THREE.MeshBasicMaterial({ color: 0x444745, wireframe: true }),
+    "white": new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true }),
+    "yellow": new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true }),
+    "transparent": new THREE.MeshBasicMaterial({ color: 0x87CEFA, opacity: 0.5, transparent: true }),
+}
 
 /////////////////////
 /* CREATE SCENE(S) */
@@ -20,7 +45,9 @@ function createScene(){
     'use strict';
 
     scene = new THREE.Scene();
-    scene.add(new THREE.AxesHelper(100));
+    scene.add(new THREE.AxesHelper(10));
+
+    createCrane(0, 0, 0);
 
 }
 
@@ -30,27 +57,27 @@ function createScene(){
 function createCamera() {
     'use strict';
 
-    var aspectRatio = window.innerWidth / window.innerHeight;
+    aspectRatio = window.innerWidth / window.innerHeight;
 
     // Frontal camera
-    frontCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
+    frontCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
     frontCamera.position.z = 10;    
 
     // Side camera
-    sideCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
+    sideCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
     sideCamera.position.x = 10;
 
     // Top camera
-    topCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
-    topCamera.position.y = 10;
+    topCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
+    topCamera.position.y = 100;
 
     // Orthographic camera
-    orthographicCamera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
-    orthographicCamera.position.set(10, 10, 10); // Position it off the main axes
+    orthographicCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
+    orthographicCamera.position.set(100, 100, 100); // Position it off the main axes
 
     // Perspective camera
     perspectiveCamera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
-    perspectiveCamera.position.set(10, 10, 10); // Position it off the main axes
+    perspectiveCamera.position.set(100, 100, 100); // Position it off the main axes
 
     // Mobile perspective camera
     //mobileCamera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
@@ -76,6 +103,146 @@ function createCamera() {
 /* CREATE OBJECT3D(S) */
 ////////////////////////
 
+// Lower crane definitions
+function createCraneBase(obj, x, y, z){
+    'use strict';
+
+    baseGeometry = new THREE.BoxGeometry(10, 2, 10);
+    baseMesh = new THREE.Mesh(baseGeometry, materials["dark grey"]);
+
+    baseMesh.position.set(x, y, z);
+
+    obj.add(baseMesh);
+}
+
+function createCraneTower(obj, x, y, z){
+    'use strict';
+
+    towerGeometry = new THREE.BoxGeometry(5, 60, 5);
+    towerMesh = new THREE.Mesh(towerGeometry, materials["yellow"]);
+
+    towerMesh.position.set(x, y, z);
+
+    obj.add(towerMesh);
+}
+
+function createLowerCrane(obj, x, y, z){
+    'use strict';
+    lowerCrane = new THREE.Object3D();
+
+    createCraneBase(crane, x, y, z);
+    createCraneTower(crane, x, y + 31, z);
+    
+    obj.add(lowerCrane);
+}
+
+// Upper crane definitions
+function createTopTower(obj, x, y, z){
+    'use strict';
+
+    topTowerGeometry = new THREE.BoxGeometry(5, 3, 5);
+    topTowerMesh = new THREE.Mesh(topTowerGeometry, materials["yellow"]);
+
+    topTowerMesh.position.set(x, y - 10, z);
+
+    obj.add(topTowerMesh);
+}
+function createPeak(obj, x, y, z){
+
+    'use strict';
+
+    // Create a box for the base of the pyramid
+    basePeakGeometry = new THREE.BoxGeometry(5, 0.1, 5);
+    basePeakMesh = new THREE.Mesh(basePeakGeometry, materials["yellow"]);
+
+    basePeakMesh.position.set(x, y - 8.5, z);
+
+    obj.add(basePeakMesh);
+
+    // Create a cylinder for the sides of the pyramid
+    sidesGeometry = new THREE.CylinderGeometry(0, 5 / Math.sqrt(2), 10, 4);
+    sidesMesh = new THREE.Mesh(sidesGeometry, materials["yellow"]);
+
+    sidesMesh.position.set(x, y - 3.5, z);
+
+    // Rotate the sidesMesh by 45 degrees around the Y axis
+    sidesMesh.rotation.y = Math.PI / 4;
+
+    obj.add(sidesMesh);
+}
+
+function createCabin(obj, x, y, z){
+    'use strict';
+
+    cabinGeometry = new THREE.BoxGeometry(5, 3, 3);
+    cabinMesh = new THREE.Mesh(cabinGeometry, materials["transparent"]);
+
+    // Position the cabin as a part of the upperCrane
+    cabinMesh.position.set(x, y - 10, z + 4);
+
+    obj.add(cabinMesh);
+}
+
+function createBoom(obj, x, y, z){
+    'use strict';
+
+    boomGeometry = new THREE.BoxGeometry(5, 50, 3);
+    boomMesh = new THREE.Mesh(boomGeometry, materials["yellow"]);
+
+    // Position the boom above the cabin and rotate it 
+    boomMesh.position.set(x + 27.5, y - 10, z);
+    boomMesh.rotation.x = (Math.PI / 2);
+    boomMesh.rotation.z = 3 * (Math.PI / 2);
+
+    obj.add(boomMesh);
+}
+
+function createCounterBoom(obj, x, y, z){
+    'use strict';
+
+    counterBoomGeometry = new THREE.BoxGeometry(5, 20, 3);
+    counterBoomMesh = new THREE.Mesh(counterBoomGeometry, materials["yellow"]);
+
+    // Position the counterBoom above the cabin and rotate it 
+    counterBoomMesh.position.set(x - 12.5, y - 10, z);
+    counterBoomMesh.rotation.x = (Math.PI / 2);
+    counterBoomMesh.rotation.z = (Math.PI / 2);
+
+    obj.add(counterBoomMesh);
+
+}
+
+function createUpperCrane(obj, x, y, z){
+    'use strict';
+    upperCrane = new THREE.Object3D();
+
+    createTopTower(upperCrane, x, y, z);
+    createPeak(upperCrane, x, y, z);
+    createCabin(upperCrane, x, y, z);
+    createBoom(upperCrane, x, y, z);
+    createCounterBoom(upperCrane, x, y, z);
+    
+    obj.add(upperCrane);
+}
+
+function createCrane(x, y, z) {
+    'use strict';
+
+    crane = new THREE.Object3D();
+
+    createLowerCrane(crane, 0, 0, 0);
+    createUpperCrane(crane, 0, 72, 0);
+
+    crane.add(lowerCrane);
+    crane.add(upperCrane);
+
+    scene.add(crane);
+
+    crane.position.x = x;
+    crane.position.y = y;
+    crane.position.z = z;
+}
+
 //////////////////////
 /* CHECK COLLISIONS */
 //////////////////////
@@ -97,6 +264,8 @@ function handleCollisions(){
 ////////////
 function update(){
     'use strict';
+
+    //upperCrane.rotation.y += 0.01;
 
 }
 
@@ -135,8 +304,12 @@ function init() {
 /////////////////////
 function animate() {
     'use strict';
-    render();
+
     requestAnimationFrame(animate);
+
+    update();
+
+    render();
 }
 
 ////////////////////////////
@@ -178,6 +351,20 @@ function onKeyDown(e) {
         /*case 54: //6
             activeCamera = mobileCamera;
             break; */
+        case 55: //7
+            for (var key in materials) {
+                if (materials.hasOwnProperty(key)) {
+                    materials[key].wireframe = !materials[key].wireframe;
+                }
+            }
+            break;
+        case 81: // q for crane rotation
+            upperCrane.rotation.y += 0.1;
+            break;
+        case 65: // a for negative crane rotation
+            upperCrane.rotation.y -= 0.1;
+            break;
+
     }
 }
 
