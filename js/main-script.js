@@ -309,6 +309,13 @@ function onKeyDown(e) {
         /*case 54: //6
             activeCamera = mobileCamera;
             break; */
+        case 81: // q for crane rotation
+            upperCrane.rotation.y += 0.1;
+            break;
+        case 65: // a for negative crane rotation
+            upperCrane.rotation.y -= 0.1;
+            break;
+
     }
 }
 
