@@ -209,7 +209,18 @@ function createCounterBoom(obj, x, y, z){
     counterBoomMesh.rotation.z = (Math.PI / 2);
 
     obj.add(counterBoomMesh);
+}
 
+function createCounterWeight(obj, x, y, z){
+    'use strict';
+
+    counterweightGeometry = new THREE.BoxGeometry(3, 3, 5);
+    counterweightMesh = new THREE.Mesh(counterweightGeometry, materials["dark grey"]);
+
+    // Position the counterweight under the counterBoom, at the end of it
+    counterweightMesh.position.set(x - 21, y - 13, z);
+
+    obj.add(counterweightMesh);
 }
 
 function createUpperCrane(obj, x, y, z){
@@ -221,6 +232,7 @@ function createUpperCrane(obj, x, y, z){
     createCabin(upperCrane, x, y, z);
     createBoom(upperCrane, x, y, z);
     createCounterBoom(upperCrane, x, y, z);
+    createCounterWeight(upperCrane, x, y, z);
     
     obj.add(upperCrane);
 }
