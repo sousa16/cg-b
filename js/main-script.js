@@ -230,7 +230,7 @@ function createCounterWeight(obj, x, y, z){
     obj.add(counterweightMesh);
 }
 
-function createHoistRope(obj, x, y, z) {
+/*function createHoistRope(obj, x, y, z) {
     'use strict';
 
     // Create a cylinder geometry for the hoist rope
@@ -248,6 +248,7 @@ function createHoistRope(obj, x, y, z) {
     // Add the hoist rope to upperCrane
     obj.add(hoistRopeMesh);
 }
+*/
 
 function createUpperCrane(obj, x, y, z){
     'use strict';
