@@ -49,6 +49,13 @@ function createScene(){
 
     createCrane(0, 0, 0);
 
+	createContainer(0, 0, 70);
+	createCubeLoad(30, 15, 50);
+	createDodecahedronLoad(25, 10, 30);
+	createIcosahedronLoad(50, 10, 10);
+	createTorusLoad(60, 10, 65);
+	createTorusKnotLoad(70, 9.5, 40);
+
 }
 
 //////////////////////
@@ -255,6 +262,93 @@ function createCrane(x, y, z) {
     crane.position.z = z;
 }
 
+/*========================= CREATE OBJECT CONTAINER===================================*/
+function addBase(obj, x, y, z){
+	'use strict';
+
+    var geometry = new THREE.BoxGeometry(30, 0, 45);
+    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+    mesh.position.set(x, y , z);
+    obj.add(mesh);
+}
+function addBigWall(obj, x, y, z){
+	'use strict';
+
+    var geometry = new THREE.BoxGeometry(4, 30, 45);
+    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+    mesh.position.set(x, y, z);
+    obj.add(mesh);
+}
+function addSmallWall(obj, x, y, z){
+	'use strict';
+
+    var geometry = new THREE.BoxGeometry(38, 30, 4);
+    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+    mesh.position.set(x, y, z);
+    obj.add(mesh);
+}
+
+
+function createContainer(x, y, z) {
+    'use strict';
+
+	var container = new THREE.Object3D();
+
+	addBase(container, 0,  0,  0);
+	addBigWall(container, 17,  15,  0);
+	addBigWall(container, -17,  15,  0);
+	addSmallWall(container, 0,  15,  24.5);
+	addSmallWall(container, 0,  15,  -24.5);
+
+	scene.add(container);
+
+    container.position.x = x;
+    container.position.y = y;
+    container.position.z = z;
+}
+
+/*========================= CREATE OBJECT LOADS===================================*/
+function createCubeLoad(x, y, z){
+	'use strict';
+
+	var geometry = new THREE.BoxGeometry(15, 15, 15);
+    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+    mesh.position.set(x, y / 2, z);
+    scene.add(mesh);
+}
+function createDodecahedronLoad(x, y, z) {
+    'use strict';
+
+    var geometry = new THREE.DodecahedronGeometry(5);
+    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+    mesh.position.set(x, y / 2, z);
+    scene.add(mesh);
+}
+function createIcosahedronLoad(x, y, z) {
+    'use strict';
+
+    var geometry = new THREE.IcosahedronGeometry(12);
+    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+    mesh.position.set(x, y , z);
+    scene.add(mesh);
+}
+function createTorusLoad(x, y, z) {
+    'use strict';
+
+    var geometry = new THREE.TorusGeometry(8, 2);
+    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+    mesh.position.set(x, y , z);
+    scene.add(mesh);
+}
+function createTorusKnotLoad(x, y, z) {
+    'use strict';
+
+    var geometry = new THREE.TorusKnotGeometry(6, 1, 64, 8, 2, 3);
+    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+    mesh.position.set(x, y , z);
+    scene.add(mesh);
+}
+
 //////////////////////
 /* CHECK COLLISIONS */
 //////////////////////
@@ -327,7 +421,7 @@ function animate() {
 ////////////////////////////
 /* RESIZE WINDOW CALLBACK */
 ////////////////////////////
-function onResize() { 
+function onResize() {
     'use strict';
 
     renderer.setSize(window.innerWidth, window.innerHeight);
