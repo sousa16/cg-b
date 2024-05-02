@@ -168,13 +168,60 @@ function createPeak(obj, x, y, z){
     obj.add(sidesMesh);
 }
 
+function createCabin(obj, x, y, z){
+    'use strict';
+
+    cabinGeometry = new THREE.BoxGeometry(5, 3, 3);
+    cabinMaterial = new THREE.MeshBasicMaterial({ color: 0x87CEFA, opacity: 0.5, transparent: true });
+    cabinMesh = new THREE.Mesh(cabinGeometry, cabinMaterial);
+
+    // Position the cabin as a part of the upperCrane
+    cabinMesh.position.set(x, y - 10, z + 4);
+
+    obj.add(cabinMesh);
+}
+
+function createBoom(obj, x, y, z){
+    'use strict';
+
+    boomGeometry = new THREE.BoxGeometry(5, 50, 3);
+    boomMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true });
+    boomMesh = new THREE.Mesh(boomGeometry, boomMaterial);
+
+    // Position the boom above the cabin and rotate it 
+    boomMesh.position.set(x + 27.5, y - 10, z);
+    boomMesh.rotation.x = (Math.PI / 2);
+    boomMesh.rotation.z = 3 * (Math.PI / 2);
+
+    obj.add(boomMesh);
+}
+
+function createCounterBoom(obj, x, y, z){
+    'use strict';
+
+    counterBoomGeometry = new THREE.BoxGeometry(5, 20, 3);
+    counterBoomMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true });
+    counterBoomMesh = new THREE.Mesh(counterBoomGeometry, counterBoomMaterial);
+
+    // Position the counterBoom above the cabin and rotate it 
+    counterBoomMesh.position.set(x - 12.5, y - 10, z);
+    counterBoomMesh.rotation.x = (Math.PI / 2);
+    counterBoomMesh.rotation.z = (Math.PI / 2);
+
+    obj.add(counterBoomMesh);
+
+}
+
 function createUpperCrane(obj, x, y, z){
     'use strict';
     upperCrane = new THREE.Object3D();
 
     createTopTower(upperCrane, x, y, z);
     createPeak(upperCrane, x, y, z);
-
+    createCabin(upperCrane, x, y, z);
+    createBoom(upperCrane, x, y, z);
+    createCounterBoom(upperCrane, x, y, z);
+    
     obj.add(upperCrane);
 }
 
