@@ -260,7 +260,7 @@ function createUpperCrane(obj, x, y, z){
     createBoom(upperCrane, x, y, z);
     createCounterBoom(upperCrane, x, y, z);
     createCounterWeight(upperCrane, x, y, z);
-    createHoistRope(upperCrane, x, y, z);
+    //createHoistRope(upperCrane, x, y, z);
     
     obj.add(upperCrane);
 }
