@@ -13,7 +13,7 @@ var camera, scene, renderer, aspectRatio;
 var activeCamera, frontCamera, sideCamera, topCamera, orthographicCamera, perspectiveCamera, mobileCamera;
 
 var materials;
-var crane, lowerCrane, upperCrane;
+var crane, lowerCrane, upperCrane, trolleyAssembly, hookAssembly;
 
 var baseGeometry, baseMesh;
 var towerGeometry, towerMesh;
@@ -27,9 +27,12 @@ var counterBoomGeometry, counterBoomMesh;
 var counterweightGeometry, counterweightMesh;
 var hoistRopeGeometry, hoistRopeMesh;
 var counterHoistRopeGeometry, counterHoistRopeMesh;
+
 var trolleyGeometry, trolleyMesh;
+
 var cableGeometry, cableMesh;
 var hookGeometry, hookMesh;
+var hookToothGeometry, hookToothMesh;
 
 var materials = {
     "dark grey": new THREE.MeshBasicMaterial({ color: 0x444745, wireframe: true }),
@@ -87,8 +90,8 @@ function createCamera() {
     perspectiveCamera.position.set(100, 100, 100); // Position it off the main axes
 
     // Mobile perspective camera
-    //mobileCamera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
-    //mobileCamera.position.set(0, 10, 0); // Position it along the length of the boom
+    mobileCamera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
+    mobileCamera.position.set(50, 23.5, 0); // Position it at the hook
 
     activeCamera = frontCamera;
 
@@ -98,7 +101,7 @@ function createCamera() {
     topCamera.lookAt(scene.position);
     orthographicCamera.lookAt(scene.position);
     perspectiveCamera.lookAt(scene.position);
-    //mobileCamera.lookAt(new THREE.Vector3(0, 0, 0)); // Orient it to look directly over the xOz plane
+    mobileCamera.lookAt(new THREE.Vector3(mobileCamera.position.x, 0, mobileCamera.position.z)); // Orient it to look directly over the xOz plane
 }
 
 
@@ -170,10 +173,9 @@ function createPeak(obj, x, y, z){
     sidesGeometry = new THREE.CylinderGeometry(0, 5 / Math.sqrt(2), 10, 4);
     sidesMesh = new THREE.Mesh(sidesGeometry, materials["yellow"]);
 
-    sidesMesh.position.set(x, y - 3.5, z);
-
-    // Rotate the sidesMesh by 45 degrees around the Y axis
     sidesMesh.rotation.y = Math.PI / 4;
+
+    sidesMesh.position.set(x, y - 3.5, z);
 
     obj.add(sidesMesh);
 }
@@ -184,7 +186,6 @@ function createCabin(obj, x, y, z){
     cabinGeometry = new THREE.BoxGeometry(5, 3, 3);
     cabinMesh = new THREE.Mesh(cabinGeometry, materials["transparent"]);
 
-    // Position the cabin as a part of the upperCrane
     cabinMesh.position.set(x, y - 10, z + 4);
 
     obj.add(cabinMesh);
@@ -196,10 +197,11 @@ function createBoom(obj, x, y, z){
     boomGeometry = new THREE.BoxGeometry(5, 50, 3);
     boomMesh = new THREE.Mesh(boomGeometry, materials["yellow"]);
 
-    // Position the boom above the cabin and rotate it 
-    boomMesh.position.set(x + 27.5, y - 10, z);
     boomMesh.rotation.x = (Math.PI / 2);
     boomMesh.rotation.z = 3 * (Math.PI / 2);
+
+    boomMesh.position.set(x + 27.5, y - 10, z);
+
 
     obj.add(boomMesh);
 }
@@ -210,10 +212,10 @@ function createCounterBoom(obj, x, y, z){
     counterBoomGeometry = new THREE.BoxGeometry(5, 20, 3);
     counterBoomMesh = new THREE.Mesh(counterBoomGeometry, materials["yellow"]);
 
-    // Position the counterBoom above the cabin and rotate it 
-    counterBoomMesh.position.set(x - 12.5, y - 10, z);
     counterBoomMesh.rotation.x = (Math.PI / 2);
     counterBoomMesh.rotation.z = (Math.PI / 2);
+
+    counterBoomMesh.position.set(x - 12.5, y - 10, z);
 
     obj.add(counterBoomMesh);
 }
@@ -224,7 +226,6 @@ function createCounterWeight(obj, x, y, z){
     counterweightGeometry = new THREE.BoxGeometry(3, 3, 5);
     counterweightMesh = new THREE.Mesh(counterweightGeometry, materials["dark grey"]);
 
-    // Position the counterweight under the counterBoom, at the end of it
     counterweightMesh.position.set(x - 21, y - 13, z);
 
     obj.add(counterweightMesh);
@@ -233,40 +234,102 @@ function createCounterWeight(obj, x, y, z){
 function createHoistRope(obj, x, y, z) {
     'use strict';
 
-    // Create a cylinder geometry for the hoist rope
     hoistRopeGeometry = new THREE.CylinderGeometry(0.1, 0.1, 40, 32);
-
-    // Create a mesh with the geometry and material
     hoistRopeMesh = new THREE.Mesh(hoistRopeGeometry, materials["dark grey"]);
 
-    // Rotate  the hoist rope
     hoistRopeMesh.rotation.z = 1.7 * (Math.PI / 4);
 
-    // Position the hoist rope at the end of the boom
     hoistRopeMesh.position.set(x + 20, y - 3.6, z);
 
-    // Add the hoist rope to upperCrane
     obj.add(hoistRopeMesh);
 }
 
 function createCounterHoistRope(obj, x, y, z) {
     'use strict';
 
-    // Create a cylinder geometry for the hoist rope
     counterHoistRopeGeometry = new THREE.CylinderGeometry(0.1, 0.1, 20, 32);
-
-    // Create a mesh with the geometry and material
     counterHoistRopeMesh = new THREE.Mesh(counterHoistRopeGeometry, materials["dark grey"]);
 
-    // Rotate  the hoist rope
     counterHoistRopeMesh.rotation.y = Math.PI;
     counterHoistRopeMesh.rotation.z = 1.35 * (Math.PI / 4);
 
-    // Position the hoist rope at the end of the boom
     counterHoistRopeMesh.position.set(x - 9.3, y - 3.7, z);
 
-    // Add the hoist rope to upperCrane
     obj.add(counterHoistRopeMesh);
+}
+
+function createCable(obj, x, y, z) {
+    'use strict';
+
+    cableGeometry = new THREE.CylinderGeometry(0.1, 0.1, 10, 32);
+    cableMesh = new THREE.Mesh(cableGeometry, materials["dark grey"]);
+
+    cableMesh.position.set(x + 50, y - 18.25, z);
+
+    obj.add(cableMesh);
+}
+
+function createHook(obj, x, y, z) {
+    'use strict';
+
+    hookGeometry = new THREE.BoxGeometry(1, 1, 1);
+    hookMesh = new THREE.Mesh(hookGeometry, materials["dark grey"]);
+
+    hookMesh.position.set(x + 50, y - 23.5, z);
+
+    obj.add(hookMesh);
+}
+
+function createHookTooth(obj, x, y, z) {
+    'use strict';
+
+    hookToothGeometry = new THREE.TetrahedronGeometry(0.5);
+    hookToothMesh = new THREE.Mesh(hookToothGeometry, materials["dark grey"]);
+
+    hookToothMesh.rotation.z = Math.PI;
+
+    hookToothMesh.position.set(x + 50, y - 24, z);
+
+    obj.add(hookToothMesh);
+}
+
+function createHookAssembly(obj, x, y, z) {
+    'use strict';
+
+    hookAssembly = new THREE.Object3D();
+
+    createCable(hookAssembly, x, y, z);
+    createHook(hookAssembly, x, y, z);
+    createHookTooth(hookAssembly, x - 0.5, y, z - 0.5);
+    createHookTooth(hookAssembly, x - 0.5, y, z + 0.5);
+    createHookTooth(hookAssembly, x + 0.5, y, z - 0.5);
+    createHookTooth(hookAssembly, x + 0.5, y, z + 0.5);
+
+
+    obj.add(hookAssembly);
+}
+
+// Hook and cart function definitions
+function createTrolley(obj, x, y, z) {
+    'use strict';
+
+    trolleyGeometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+    trolleyMesh = new THREE.Mesh(trolleyGeometry, materials["dark grey"]);
+
+    trolleyMesh.position.set(x + 50, y - 12.5, z);
+
+    obj.add(trolleyMesh);
+
+}
+
+function createTrolleyAssembly(obj, x, y, z) {
+    'use strict';
+    trolleyAssembly = new THREE.Object3D();
+
+    createTrolley(trolleyAssembly, x, y, z);
+    createHookAssembly(trolleyAssembly, x, y, z);
+
+    obj.add(trolleyAssembly);
 }
 
 function createUpperCrane(obj, x, y, z){
@@ -281,6 +344,8 @@ function createUpperCrane(obj, x, y, z){
     createCounterWeight(upperCrane, x, y, z);
     createHoistRope(upperCrane, x, y, z);
     createCounterHoistRope(upperCrane, x, y, z);
+
+    createTrolleyAssembly(upperCrane, x, y, z);
     
     obj.add(upperCrane);
 }
@@ -495,9 +560,9 @@ function onKeyDown(e) {
         case 53: //5
             activeCamera = perspectiveCamera;
             break;
-        /*case 54: //6
+        case 54: //6
             activeCamera = mobileCamera;
-            break; */
+            break; 
         case 55: //7
             for (var key in materials) {
                 if (materials.hasOwnProperty(key)) {
