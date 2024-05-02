@@ -230,25 +230,44 @@ function createCounterWeight(obj, x, y, z){
     obj.add(counterweightMesh);
 }
 
-/*function createHoistRope(obj, x, y, z) {
+function createHoistRope(obj, x, y, z) {
     'use strict';
 
     // Create a cylinder geometry for the hoist rope
-    hoistRopeGeometry = new THREE.CylinderGeometry(0.1, 0.1, 50, 32);
+    hoistRopeGeometry = new THREE.CylinderGeometry(0.1, 0.1, 40, 32);
 
     // Create a mesh with the geometry and material
     hoistRopeMesh = new THREE.Mesh(hoistRopeGeometry, materials["dark grey"]);
 
-    // Position the hoist rope at the midpoint between the peak and the end of the boom
-    hoistRopeMesh.position.set(x, y - 3.5, z);
+    // Rotate  the hoist rope
+    hoistRopeMesh.rotation.z = 1.7 * (Math.PI / 4);
 
-    // Rotate the hoist rope to point from the peak to the end of the boom
-    hoistRopeMesh.lookAt(x + 50, y - 10, z);
+    // Position the hoist rope at the end of the boom
+    hoistRopeMesh.position.set(x + 20, y - 3.6, z);
 
     // Add the hoist rope to upperCrane
     obj.add(hoistRopeMesh);
 }
-*/
+
+function createCounterHoistRope(obj, x, y, z) {
+    'use strict';
+
+    // Create a cylinder geometry for the hoist rope
+    counterHoistRopeGeometry = new THREE.CylinderGeometry(0.1, 0.1, 20, 32);
+
+    // Create a mesh with the geometry and material
+    counterHoistRopeMesh = new THREE.Mesh(counterHoistRopeGeometry, materials["dark grey"]);
+
+    // Rotate  the hoist rope
+    counterHoistRopeMesh.rotation.y = Math.PI;
+    counterHoistRopeMesh.rotation.z = 1.35 * (Math.PI / 4);
+
+    // Position the hoist rope at the end of the boom
+    counterHoistRopeMesh.position.set(x - 9.3, y - 3.7, z);
+
+    // Add the hoist rope to upperCrane
+    obj.add(counterHoistRopeMesh);
+}
 
 function createUpperCrane(obj, x, y, z){
     'use strict';
@@ -260,7 +279,8 @@ function createUpperCrane(obj, x, y, z){
     createBoom(upperCrane, x, y, z);
     createCounterBoom(upperCrane, x, y, z);
     createCounterWeight(upperCrane, x, y, z);
-    //createHoistRope(upperCrane, x, y, z);
+    createHoistRope(upperCrane, x, y, z);
+    createCounterHoistRope(upperCrane, x, y, z);
     
     obj.add(upperCrane);
 }
