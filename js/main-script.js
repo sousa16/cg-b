@@ -38,9 +38,17 @@ var materials = {
     "dark grey": new THREE.MeshBasicMaterial({ color: 0x444745, wireframe: true }),
     "white": new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true }),
     "yellow": new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true }),
+	"red": new THREE.MeshBasicMaterial({ color: 0xd71b12, wireframe: true }),
+	"pink": new THREE.MeshBasicMaterial({ color: 0xf757d7, wireframe: true }),
+	"blue": new THREE.MeshBasicMaterial({ color: 0x0b0fd3, wireframe: true }),
+	"orange": new THREE.MeshBasicMaterial({ color: 0xeb6900, wireframe: true }),
+	"purple": new THREE.MeshBasicMaterial({ color: 0x9000eb, wireframe: true }),
+	"dark green": new THREE.MeshBasicMaterial({ color: 0x257203, wireframe: true }),
+	"dark green 1": new THREE.MeshBasicMaterial({ color: 0x206a00, wireframe: true }),
+	"dark green 2": new THREE.MeshBasicMaterial({ color: 0x00450e, wireframe: true }),
     "transparent": new THREE.MeshBasicMaterial({ color: 0x87CEFA, opacity: 0.5, transparent: true }),
 }
-        
+
 /////////////////////
 /* CREATE SCENE(S) */
 /////////////////////
@@ -50,13 +58,13 @@ function createScene(){
     scene = new THREE.Scene();
     scene.add(new THREE.AxesHelper(10));
 
-    createCrane(0, 0, 0);
+    createCrane(0, 1, 0);
 
-	createContainer(0, 0, 70);
-	createCubeLoad(30, 15, 50);
+	createContainer(0, 0, 50);
+	createCubeLoad(30, 10, 50);
 	createDodecahedronLoad(25, 10, 30);
-	createIcosahedronLoad(50, 10, 10);
-	createTorusLoad(60, 10, 65);
+	createIcosahedronLoad(50, 5.9, 10);
+	createTorusLoad(60, 6, 65);
 	createTorusKnotLoad(70, 9.5, 40);
 
 }
@@ -71,7 +79,7 @@ function createCamera() {
 
     // Frontal camera
     frontCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
-    frontCamera.position.z = 100;    
+    frontCamera.position.z = 100;
 
     // Side camera
     sideCamera = new THREE.OrthographicCamera(window.innerWidth / -10, window.innerWidth / 10, window.innerHeight / 10, window.innerHeight / -10, 1, 1000);
@@ -142,7 +150,7 @@ function createLowerCrane(obj, x, y, z){
 
     createCraneBase(crane, x, y, z);
     createCraneTower(crane, x, y + 31, z);
-    
+
     obj.add(lowerCrane);
 }
 
@@ -346,7 +354,7 @@ function createUpperCrane(obj, x, y, z){
     createCounterHoistRope(upperCrane, x, y, z);
 
     createTrolleyAssembly(upperCrane, x, y, z);
-    
+
     obj.add(upperCrane);
 }
 
@@ -369,27 +377,27 @@ function createCrane(x, y, z) {
 }
 
 /*========================= CREATE OBJECT CONTAINER===================================*/
-function addBase(obj, x, y, z){
+function addContainerBase(obj, x, y, z){
 	'use strict';
 
-    var geometry = new THREE.BoxGeometry(30, 0, 45);
-    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+    var geometry = new THREE.BoxGeometry(20, 0, 35);
+    var mesh = new THREE.Mesh(geometry, materials["dark green 2"]);
     mesh.position.set(x, y , z);
     obj.add(mesh);
 }
-function addBigWall(obj, x, y, z){
+function addContainerBigWall(obj, x, y, z){
 	'use strict';
 
-    var geometry = new THREE.BoxGeometry(4, 30, 45);
-    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+    var geometry = new THREE.BoxGeometry(4, 20, 35);
+    var mesh = new THREE.Mesh(geometry, materials["dark green"]);
     mesh.position.set(x, y, z);
     obj.add(mesh);
 }
-function addSmallWall(obj, x, y, z){
+function addContainerSmallWall(obj, x, y, z){
 	'use strict';
 
-    var geometry = new THREE.BoxGeometry(38, 30, 4);
-    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+    var geometry = new THREE.BoxGeometry(28, 20, 4);
+    var mesh = new THREE.Mesh(geometry, materials["dark green 1"]);
     mesh.position.set(x, y, z);
     obj.add(mesh);
 }
@@ -400,11 +408,11 @@ function createContainer(x, y, z) {
 
 	var container = new THREE.Object3D();
 
-	addBase(container, 0,  0,  0);
-	addBigWall(container, 17,  15,  0);
-	addBigWall(container, -17,  15,  0);
-	addSmallWall(container, 0,  15,  24.5);
-	addSmallWall(container, 0,  15,  -24.5);
+	addContainerBase(container, 0,  0,  0);
+	addContainerBigWall(container, 12,  10,  0);
+	addContainerBigWall(container, -12,  10,  0);
+	addContainerSmallWall(container, 0,  10,  19.5);
+	addContainerSmallWall(container, 0,  10,  -19.5);
 
 	scene.add(container);
 
@@ -417,8 +425,8 @@ function createContainer(x, y, z) {
 function createCubeLoad(x, y, z){
 	'use strict';
 
-	var geometry = new THREE.BoxGeometry(15, 15, 15);
-    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+	var geometry = new THREE.BoxGeometry(10, 10, 10);
+    var mesh = new THREE.Mesh(geometry, materials["red"]);
     mesh.position.set(x, y / 2, z);
     scene.add(mesh);
 }
@@ -426,23 +434,23 @@ function createDodecahedronLoad(x, y, z) {
     'use strict';
 
     var geometry = new THREE.DodecahedronGeometry(5);
-    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+    var mesh = new THREE.Mesh(geometry, materials["blue"]);
     mesh.position.set(x, y / 2, z);
     scene.add(mesh);
 }
 function createIcosahedronLoad(x, y, z) {
     'use strict';
 
-    var geometry = new THREE.IcosahedronGeometry(12);
-    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+    var geometry = new THREE.IcosahedronGeometry(7);
+    var mesh = new THREE.Mesh(geometry, materials["orange"]);
     mesh.position.set(x, y , z);
     scene.add(mesh);
 }
 function createTorusLoad(x, y, z) {
     'use strict';
 
-    var geometry = new THREE.TorusGeometry(8, 2);
-    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+    var geometry = new THREE.TorusGeometry(4, 2);
+    var mesh = new THREE.Mesh(geometry, materials["pink"]);
     mesh.position.set(x, y , z);
     scene.add(mesh);
 }
@@ -450,7 +458,7 @@ function createTorusKnotLoad(x, y, z) {
     'use strict';
 
     var geometry = new THREE.TorusKnotGeometry(6, 1, 64, 8, 2, 3);
-    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+    var mesh = new THREE.Mesh(geometry, materials["purple"]);
     mesh.position.set(x, y , z);
     scene.add(mesh);
 }
@@ -562,7 +570,7 @@ function onKeyDown(e) {
             break;
         case 54: //6
             activeCamera = mobileCamera;
-            break; 
+            break;
         case 55: //7
             for (var key in materials) {
                 if (materials.hasOwnProperty(key)) {
