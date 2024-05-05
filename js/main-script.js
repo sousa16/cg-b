@@ -9,7 +9,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 //////////////////////
 
 
-var camera, scene, renderer, aspectRatio;
+var camera, scene, renderer, aspectRatio, clock;
 var activeCamera, frontCamera, sideCamera, topCamera, orthographicCamera, perspectiveCamera, mobileCamera;
 
 var materials;
@@ -56,15 +56,28 @@ var materials = {
 }
 
 /////////////////////
+/* Keyboard Inputs */
+/////////////////////
+var keyA = false;
+var keyQ = false;
+
+var keyW = false;
+var keyS = false;
+
+var keyE = false;
+var keyD = false;
+
+/////////////////////
 /* CREATE SCENE(S) */
 /////////////////////
-function createScene(){
+function createScene() {
     'use strict';
 
     scene = new THREE.Scene();
     scene.add(new THREE.AxesHelper(10));
 
     createCrane(0, 1, 0);
+
 
 	createContainer(0, 0, 50);
 	createCubeLoad(30, 10, 50);
@@ -129,7 +142,7 @@ function createCamera() {
 ////////////////////////
 
 // Lower crane definitions
-function createCraneBase(obj, x, y, z){
+function createCraneBase(obj, x, y, z) {
     'use strict';
 
     baseGeometry = new THREE.BoxGeometry(10, 2, 10);
@@ -140,7 +153,7 @@ function createCraneBase(obj, x, y, z){
     obj.add(baseMesh);
 }
 
-function createCraneTower(obj, x, y, z){
+function createCraneTower(obj, x, y, z) {
     'use strict';
 
     towerGeometry = new THREE.BoxGeometry(5, 60, 5);
@@ -151,7 +164,7 @@ function createCraneTower(obj, x, y, z){
     obj.add(towerMesh);
 }
 
-function createLowerCrane(obj, x, y, z){
+function createLowerCrane(obj, x, y, z) {
     'use strict';
     lowerCrane = new THREE.Object3D();
 
@@ -162,7 +175,7 @@ function createLowerCrane(obj, x, y, z){
 }
 
 // Upper crane definitions
-function createTopTower(obj, x, y, z){
+function createTopTower(obj, x, y, z) {
     'use strict';
 
     topTowerGeometry = new THREE.BoxGeometry(5, 3, 5);
@@ -172,7 +185,7 @@ function createTopTower(obj, x, y, z){
 
     obj.add(topTowerMesh);
 }
-function createPeak(obj, x, y, z){
+function createPeak(obj, x, y, z) {
 
     'use strict';
 
@@ -195,7 +208,7 @@ function createPeak(obj, x, y, z){
     obj.add(sidesMesh);
 }
 
-function createCabin(obj, x, y, z){
+function createCabin(obj, x, y, z) {
     'use strict';
 
     cabinGeometry = new THREE.BoxGeometry(5, 3, 3);
@@ -206,7 +219,7 @@ function createCabin(obj, x, y, z){
     obj.add(cabinMesh);
 }
 
-function createBoom(obj, x, y, z){
+function createBoom(obj, x, y, z) {
     'use strict';
 
     boomGeometry = new THREE.BoxGeometry(5, 50, 3);
@@ -221,7 +234,7 @@ function createBoom(obj, x, y, z){
     obj.add(boomMesh);
 }
 
-function createCounterBoom(obj, x, y, z){
+function createCounterBoom(obj, x, y, z) {
     'use strict';
 
     counterBoomGeometry = new THREE.BoxGeometry(5, 20, 3);
@@ -235,7 +248,7 @@ function createCounterBoom(obj, x, y, z){
     obj.add(counterBoomMesh);
 }
 
-function createCounterWeight(obj, x, y, z){
+function createCounterWeight(obj, x, y, z) {
     'use strict';
 
     counterweightGeometry = new THREE.BoxGeometry(3, 3, 5);
@@ -347,7 +360,7 @@ function createTrolleyAssembly(obj, x, y, z) {
     obj.add(trolleyAssembly);
 }
 
-function createUpperCrane(obj, x, y, z){
+function createUpperCrane(obj, x, y, z) {
     'use strict';
     upperCrane = new THREE.Object3D();
 
@@ -363,7 +376,6 @@ function createUpperCrane(obj, x, y, z){
     createTrolleyAssembly(upperCrane, x, y, z);
 
 	createHookBall(upperCrane, x, y, z);
-
     obj.add(upperCrane);
 }
 
@@ -386,6 +398,7 @@ function createCrane(x, y, z) {
 }
 
 /*========================= CREATE OBJECT CONTAINER===================================*/
+
 function addContainerBase(obj, x, y, z){
 	'use strict';
 
@@ -397,11 +410,13 @@ function addContainerBase(obj, x, y, z){
 function addContainerBigWall(obj, x, y, z){
 	'use strict';
 
+
     var geometry = new THREE.BoxGeometry(4, 20, 35);
     var mesh = new THREE.Mesh(geometry, materials["dark green"]);
     mesh.position.set(x, y, z);
     obj.add(mesh);
 }
+
 function addContainerSmallWall(obj, x, y, z){
 	'use strict';
 
@@ -415,7 +430,7 @@ function addContainerSmallWall(obj, x, y, z){
 function createContainer(x, y, z) {
     'use strict';
 
-	var container = new THREE.Object3D();
+    var container = new THREE.Object3D();
 
 	addContainerBase(container, 0,  0,  0);
 	addContainerBigWall(container, 12,  10,  0);
@@ -423,7 +438,7 @@ function createContainer(x, y, z) {
 	addContainerSmallWall(container, 0,  10,  19.5);
 	addContainerSmallWall(container, 0,  10,  -19.5);
 
-	scene.add(container);
+    scene.add(container);
 
     container.position.x = x;
     container.position.y = y;
@@ -431,6 +446,7 @@ function createContainer(x, y, z) {
 }
 
 /*========================= CREATE OBJECT LOADS===================================*/
+
 function addCubeLoad(obj, x, y, z){
 	'use strict';
 
@@ -449,7 +465,6 @@ function addDodecahedronLoad(obj, x, y, z) {
 }
 function addIcosahedronLoad(obj, x, y, z) {
     'use strict';
-
     var geometry = new THREE.IcosahedronGeometry(7);
     var mesh = new THREE.Mesh(geometry, materials["orange"]);
     mesh.position.set(x, y , z);
@@ -630,7 +645,7 @@ function createTorusKnotBall(obj, x, y, z){
 //////////////////////
 /* CHECK COLLISIONS */
 //////////////////////
-function checkCollisions(){
+function checkCollisions() {
     'use strict';
 	if(checkSphereCollision(ball, cubeBall, 2, 6) == true){
 		ball.children[0].material.color.setHex(0xff0000);
@@ -673,7 +688,7 @@ function checkSphereCollision(sphere1, sphere2, radius1, radius2) {
 ///////////////////////
 /* HANDLE COLLISIONS */
 ///////////////////////
-function handleCollisions(){
+function handleCollisions() {
     'use strict';
 
 }
@@ -681,9 +696,14 @@ function handleCollisions(){
 ////////////
 /* UPDATE */
 ////////////
-function update(){
+function update() {
     'use strict';
-
+    var delta = clock.getDelta();
+    if (keyA) {
+        rotateCraneY(-1, delta);
+    }
+    if (keyQ) {
+        rotateCraneY(1, delta);
     //upperCrane.rotation.y += 0.01;
 	checkCollisions();
 }
@@ -707,13 +727,15 @@ function init() {
     renderer.setClearColor(0xd3d3d3); // light gray color
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
+    clock = new THREE.Clock();
+    //clock.start();
 
     createScene();
     createCamera();
 
     render();
 
-    //window.addEventListener("keyup", onKeyUp);
+    window.addEventListener("keyup", onKeyUp);
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("resize", onResize);
 }
@@ -744,6 +766,14 @@ function onResize() {
         camera.updateProjectionMatrix();
     }
 
+}
+
+//////////////////////////////
+/* CRANE ROTATION FUNCTIONS */
+//////////////////////////////
+
+function rotateCraneY(direction, delta) {
+    upperCrane.rotation.y += direction * 0.1 * delta;
 }
 
 ///////////////////////
@@ -778,10 +808,12 @@ function onKeyDown(e) {
             }
             break;
         case 81: // q for crane rotation
-            upperCrane.rotation.y += 0.1;
+            keyQ = true;
+            // upperCrane.rotation.y += 0.1;
             break;
         case 65: // a for negative crane rotation
-            upperCrane.rotation.y -= 0.1;
+            //upperCrane.rotation.y -= 0.1;
+            keyA = true;
             break;
 		/*
 		//Debug para as colisoes
@@ -811,8 +843,16 @@ function onKeyDown(e) {
 ///////////////////////
 /* KEY UP CALLBACK */
 ///////////////////////
-function onKeyUp(e){
+function onKeyUp(e) {
     'use strict';
+    switch (e.keyCode) {
+        case 81: // q for crane rotation
+            keyQ = false;
+            break;
+        case 65: // a for negative crane rotation
+            keyA = false;
+            break;
+    }
 }
 
 init();
