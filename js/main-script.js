@@ -14,6 +14,8 @@ var activeCamera, frontCamera, sideCamera, topCamera, orthographicCamera, perspe
 
 var materials;
 var crane, lowerCrane, upperCrane, trolleyAssembly, hookAssembly;
+var cube, dodecahedron, isocahedron, torus, torusKnot;
+var ball, cubeBall, dodeBall, isoBall, torusBall, torusKnotBall;
 
 var baseGeometry, baseMesh;
 var towerGeometry, towerMesh;
@@ -34,10 +36,22 @@ var cableGeometry, cableMesh;
 var hookGeometry, hookMesh;
 var hookToothGeometry, hookToothMesh;
 
+var ballGeometry, ballMesh;
+
 var materials = {
     "dark grey": new THREE.MeshBasicMaterial({ color: 0x444745, wireframe: true }),
     "white": new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true }),
     "yellow": new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true }),
+	"red": new THREE.MeshBasicMaterial({ color: 0xd71b12, wireframe: true }),
+	"pink": new THREE.MeshBasicMaterial({ color: 0xf757d7, wireframe: true }),
+	"blue": new THREE.MeshBasicMaterial({ color: 0x0b0fd3, wireframe: true }),
+	"orange": new THREE.MeshBasicMaterial({ color: 0xeb6900, wireframe: true }),
+	"purple": new THREE.MeshBasicMaterial({ color: 0x9000eb, wireframe: true }),
+	"dark green": new THREE.MeshBasicMaterial({ color: 0x257203, wireframe: true }),
+	"dark green 1": new THREE.MeshBasicMaterial({ color: 0x206a00, wireframe: true }),
+	"dark green 2": new THREE.MeshBasicMaterial({ color: 0x00450e, wireframe: true }),
+	"pinkBall": new THREE.MeshBasicMaterial({ color: 0xf757d9, wireframe: true }),
+	"redBall": new THREE.MeshBasicMaterial({ color: 0xd71b12, wireframe: true }),
     "transparent": new THREE.MeshBasicMaterial({ color: 0x87CEFA, opacity: 0.5, transparent: true }),
 }
 
@@ -62,14 +76,16 @@ function createScene() {
     scene = new THREE.Scene();
     scene.add(new THREE.AxesHelper(10));
 
-    createCrane(0, 0, 0);
+    createCrane(0, 1, 0);
 
-    createContainer(0, 0, 70);
-    createCubeLoad(30, 15, 50);
-    createDodecahedronLoad(25, 10, 30);
-    createIcosahedronLoad(50, 10, 10);
-    createTorusLoad(60, 10, 65);
-    createTorusKnotLoad(70, 9.5, 40);
+
+	createContainer(0, 0, 50);
+	createCubeLoad(30, 10, 50);
+	createDodecahedronLoad(25, 10, 30);
+	createIcosahedronLoad(50, 5.9, 10);
+	createTorusLoad(60, 6, 65);
+	createTorusKnotLoad(70, 9.5, 40);
+
 
 }
 
@@ -359,6 +375,7 @@ function createUpperCrane(obj, x, y, z) {
 
     createTrolleyAssembly(upperCrane, x, y, z);
 
+	createHookBall(upperCrane, x, y, z);
     obj.add(upperCrane);
 }
 
@@ -381,27 +398,30 @@ function createCrane(x, y, z) {
 }
 
 /*========================= CREATE OBJECT CONTAINER===================================*/
-function addBase(obj, x, y, z) {
-    'use strict';
 
-    var geometry = new THREE.BoxGeometry(30, 0, 45);
-    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+function addContainerBase(obj, x, y, z){
+	'use strict';
+
+    var geometry = new THREE.BoxGeometry(20, 0, 35);
+    var mesh = new THREE.Mesh(geometry, materials["dark green 2"]);
+    mesh.position.set(x, y , z);
+    obj.add(mesh);
+}
+function addContainerBigWall(obj, x, y, z){
+	'use strict';
+
+
+    var geometry = new THREE.BoxGeometry(4, 20, 35);
+    var mesh = new THREE.Mesh(geometry, materials["dark green"]);
     mesh.position.set(x, y, z);
     obj.add(mesh);
 }
-function addBigWall(obj, x, y, z) {
-    'use strict';
 
-    var geometry = new THREE.BoxGeometry(4, 30, 45);
-    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
-    mesh.position.set(x, y, z);
-    obj.add(mesh);
-}
-function addSmallWall(obj, x, y, z) {
-    'use strict';
+function addContainerSmallWall(obj, x, y, z){
+	'use strict';
 
-    var geometry = new THREE.BoxGeometry(38, 30, 4);
-    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
+    var geometry = new THREE.BoxGeometry(28, 20, 4);
+    var mesh = new THREE.Mesh(geometry, materials["dark green 1"]);
     mesh.position.set(x, y, z);
     obj.add(mesh);
 }
@@ -412,11 +432,11 @@ function createContainer(x, y, z) {
 
     var container = new THREE.Object3D();
 
-    addBase(container, 0, 0, 0);
-    addBigWall(container, 17, 15, 0);
-    addBigWall(container, -17, 15, 0);
-    addSmallWall(container, 0, 15, 24.5);
-    addSmallWall(container, 0, 15, -24.5);
+	addContainerBase(container, 0,  0,  0);
+	addContainerBigWall(container, 12,  10,  0);
+	addContainerBigWall(container, -12,  10,  0);
+	addContainerSmallWall(container, 0,  10,  19.5);
+	addContainerSmallWall(container, 0,  10,  -19.5);
 
     scene.add(container);
 
@@ -426,54 +446,244 @@ function createContainer(x, y, z) {
 }
 
 /*========================= CREATE OBJECT LOADS===================================*/
-function createCubeLoad(x, y, z) {
+
+function addCubeLoad(obj, x, y, z){
+	'use strict';
+
+	var geometry = new THREE.BoxGeometry(10, 10, 10);
+    var mesh = new THREE.Mesh(geometry, materials["red"]);
+    mesh.position.set(x, y / 2, z);
+    obj.add(mesh);
+}
+function addDodecahedronLoad(obj, x, y, z) {
     'use strict';
 
-    var geometry = new THREE.BoxGeometry(15, 15, 15);
-    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
-    mesh.position.set(x, y / 2, z);
+    var geometry = new THREE.DodecahedronGeometry(5);
+    var mesh = new THREE.Mesh(geometry, materials["blue"]);
+    mesh.position.set(x, y /2, z);
+    obj.add(mesh);
+}
+function addIcosahedronLoad(obj, x, y, z) {
+    'use strict';
+    var geometry = new THREE.IcosahedronGeometry(7);
+    var mesh = new THREE.Mesh(geometry, materials["orange"]);
+    mesh.position.set(x, y , z);
     scene.add(mesh);
+}
+function addTorusLoad(obj, x, y, z) {
+    'use strict';
+
+    var geometry = new THREE.TorusGeometry(4, 2);
+    var mesh = new THREE.Mesh(geometry, materials["pink"]);
+    mesh.position.set(x, y , z);
+    scene.add(mesh);
+}
+function addTorusKnotLoad(obj, x, y, z) {
+    'use strict';
+
+    var geometry = new THREE.TorusKnotGeometry(6, 1, 64, 8, 2, 3);
+    var mesh = new THREE.Mesh(geometry, materials["purple"]);
+    mesh.position.set(x, y , z);
+    scene.add(mesh);
+}
+
+// Loads with colision spheres
+function createCubeLoad(x, y, z){
+	'use strict';
+
+	cube = new THREE.Object3D();
+
+	addCubeLoad(cube, x, y, z);
+	createCubeBall(cube, x, y, z);
+
+	scene.add(cube);
 }
 function createDodecahedronLoad(x, y, z) {
     'use strict';
 
-    var geometry = new THREE.DodecahedronGeometry(5);
-    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
-    mesh.position.set(x, y / 2, z);
-    scene.add(mesh);
+	dodecahedron = new THREE.Object3D();
+
+	addDodecahedronLoad(dodecahedron, x, y, z);
+	createDodeBall(dodecahedron, x, y, z);
+
+    scene.add(dodecahedron);
 }
 function createIcosahedronLoad(x, y, z) {
     'use strict';
 
-    var geometry = new THREE.IcosahedronGeometry(12);
-    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
-    mesh.position.set(x, y, z);
-    scene.add(mesh);
+	isocahedron = new THREE.Object3D();
+
+	addIcosahedronLoad(isocahedron, x, y, z);
+	createIsoBall(isocahedron, x, y + 6, z);
+
+    scene.add(isocahedron);
 }
 function createTorusLoad(x, y, z) {
     'use strict';
 
-    var geometry = new THREE.TorusGeometry(8, 2);
-    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
-    mesh.position.set(x, y, z);
-    scene.add(mesh);
+	torus = new THREE.Object3D();
+
+	addTorusLoad(torus, x, y, z);
+	createTorusBall(torus, x, y + 6, z);
+
+    scene.add(torus);
 }
 function createTorusKnotLoad(x, y, z) {
     'use strict';
 
-    var geometry = new THREE.TorusKnotGeometry(6, 1, 64, 8, 2, 3);
-    var mesh = new THREE.Mesh(geometry, materials["dark grey"]);
-    mesh.position.set(x, y, z);
-    scene.add(mesh);
+	torusKnot = new THREE.Object3D();
+	addTorusKnotLoad(torusKnot, x, y, z);
+	createTorusKnotBall(torusKnot, x, y + 10, z);
+
+    scene.add(torusKnot);
 }
+/*======================= CREATE COLISION DETECTION SPHERES =======================*/
+
+function createHookBall(obj, x, y, z){
+	'use strict';
+
+	ball = new THREE.Object3D();
+
+	ballGeometry = new THREE.SphereGeometry(2);
+	ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
+
+	ballMesh.material.opacity = 0.03;
+    ballMesh.material.transparent = true;
+
+	ball.add(ballMesh);
+    ball.position.set(x + 50, y - 23.5, z);
+
+    obj.add(ball);
+}
+
+function createCubeBall(obj, x, y, z){
+	'use strict';
+
+	cubeBall = new THREE.Object3D();
+
+	ballGeometry = new THREE.SphereGeometry(6);
+	ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
+
+	ballMesh.material.opacity = 0.03;
+    ballMesh.material.transparent = true;
+
+	cubeBall.add(ballMesh);
+    cubeBall.position.set(x, y / 2, z);
+
+    obj.add(cubeBall);
+}
+
+function createDodeBall(obj, x, y, z){
+	'use strict';
+
+	dodeBall = new THREE.Object3D();
+
+	ballGeometry = new THREE.SphereGeometry(5.5);
+	ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
+
+	ballMesh.material.opacity = 0.03;
+    ballMesh.material.transparent = true;
+
+	dodeBall.add(ballMesh);
+    dodeBall.position.set(x, y / 2, z);
+
+    obj.add(dodeBall);
+}
+
+function createIsoBall(obj, x, y, z){
+	'use strict';
+
+	isoBall = new THREE.Object3D();
+
+	ballGeometry = new THREE.SphereGeometry(7);
+	ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
+
+	ballMesh.material.opacity = 0.03;
+    ballMesh.material.transparent = true;
+
+	isoBall.add(ballMesh);
+    isoBall.position.set(x, y / 2, z);
+
+    obj.add(isoBall);
+}
+
+function createTorusBall(obj, x, y, z){
+	'use strict';
+
+	torusBall = new THREE.Object3D();
+
+	ballGeometry = new THREE.SphereGeometry(6);
+	ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
+
+	ballMesh.material.opacity = 0.03;
+    ballMesh.material.transparent = true;
+
+	torusBall.add(ballMesh);
+    torusBall.position.set(x, y / 2, z);
+
+    obj.add(torusBall);
+}
+
+function createTorusKnotBall(obj, x, y, z){
+	'use strict';
+
+	torusKnotBall = new THREE.Object3D();
+
+	ballGeometry = new THREE.SphereGeometry(10);
+	ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
+
+	ballMesh.material.opacity = 0.03;
+    ballMesh.material.transparent = true;
+
+	torusKnotBall.add(ballMesh);
+    torusKnotBall.position.set(x, y / 2, z);
+
+    obj.add(torusKnotBall);
+}
+
 
 //////////////////////
 /* CHECK COLLISIONS */
 //////////////////////
 function checkCollisions() {
     'use strict';
+	if(checkSphereCollision(ball, cubeBall, 2, 6) == true){
+		ball.children[0].material.color.setHex(0xff0000);
+
+	}
+	else if(checkSphereCollision(ball, dodeBall, 2, 5.5) == true){
+		ball.children[0].material.color.setHex(0xff0000);
+	}
+	else if(checkSphereCollision(ball, isoBall, 2, 7) == true){
+		ball.children[0].material.color.setHex(0xff0000);
+	}
+	else if(checkSphereCollision(ball, torusBall, 2, 6) == true){
+		ball.children[0].material.color.setHex(0xff0000);
+	}
+	else if(checkSphereCollision(ball, torusKnotBall, 2, 10) == true){
+		ball.children[0].material.color.setHex(0xff0000);
+	}
+	else{
+		ball.children[0].material.color.setHex(0xf757d9);
+	}
 
 }
+
+function checkSphereCollision(sphere1, sphere2, radius1, radius2) {
+	'use strict';
+    var center1 = sphere1.position.clone();
+    var center2 = sphere2.position.clone();
+
+    var distance = center1.distanceTo(center2);
+
+    if (distance < radius1 + radius2) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
 
 ///////////////////////
 /* HANDLE COLLISIONS */
@@ -494,9 +704,8 @@ function update() {
     }
     if (keyQ) {
         rotateCraneY(1, delta);
-
-    }
-
+    //upperCrane.rotation.y += 0.01;
+	checkCollisions();
 }
 
 /////////////
@@ -606,6 +815,27 @@ function onKeyDown(e) {
             //upperCrane.rotation.y -= 0.1;
             keyA = true;
             break;
+		/*
+		//Debug para as colisoes
+		case 38: // Seta para cima
+            ball.position.z -= 1; // Aumenta a posição em 1 unidade no eixo y
+            break;
+        case 40: // Seta para baixo
+            ball.position.z += 1; // Diminui a posição em 1 unidade no eixo y
+            break;
+        case 39: // Seta para direita
+            ball.position.x += 1; // Aumenta a posição em 1 unidade no eixo x
+            break;
+        case 37: // Seta para esquerda
+            ball.position.x -= 1; // Diminui a posição em 1 unidade no eixo x
+            break;
+		case 79: // o
+            ball.position.y += 1;
+            break;
+        case 80: // Seta para esquerda
+            ball.position.y -= 1;
+            break;
+		*/
 
     }
 }
