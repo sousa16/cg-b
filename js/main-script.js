@@ -706,6 +706,7 @@ function update() {
         rotateCraneY(1, delta);
     //upperCrane.rotation.y += 0.01;
 	checkCollisions();
+    }
 }
 
 /////////////
