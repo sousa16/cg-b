@@ -42,17 +42,17 @@ var materials = {
     "dark grey": new THREE.MeshBasicMaterial({ color: 0x444745, wireframe: true }),
     "white": new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true }),
     "yellow": new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true }),
-	"red": new THREE.MeshBasicMaterial({ color: 0xd71b12, wireframe: true }),
-	"pink": new THREE.MeshBasicMaterial({ color: 0xf757d7, wireframe: true }),
-	"blue": new THREE.MeshBasicMaterial({ color: 0x0b0fd3, wireframe: true }),
-	"orange": new THREE.MeshBasicMaterial({ color: 0xeb6900, wireframe: true }),
-	"purple": new THREE.MeshBasicMaterial({ color: 0x9000eb, wireframe: true }),
-	"dark green": new THREE.MeshBasicMaterial({ color: 0x257203, wireframe: true }),
-	"dark green 1": new THREE.MeshBasicMaterial({ color: 0x206a00, wireframe: true }),
-	"dark green 2": new THREE.MeshBasicMaterial({ color: 0x00450e, wireframe: true }),
-	"pinkBall": new THREE.MeshBasicMaterial({ color: 0xf757d9, wireframe: true }),
-	"redBall": new THREE.MeshBasicMaterial({ color: 0xd71b12, wireframe: true }),
-    "transparent": new THREE.MeshBasicMaterial({ color: 0x87CEFA, opacity: 0.5, transparent: true }),
+    "red": new THREE.MeshBasicMaterial({ color: 0xd71b12, wireframe: true }),
+    "pink": new THREE.MeshBasicMaterial({ color: 0xf757d7, wireframe: true }),
+    "blue": new THREE.MeshBasicMaterial({ color: 0x0b0fd3, wireframe: true }),
+    "orange": new THREE.MeshBasicMaterial({ color: 0xeb6900, wireframe: true }),
+    "purple": new THREE.MeshBasicMaterial({ color: 0x9000eb, wireframe: true }),
+    "dark green": new THREE.MeshBasicMaterial({ color: 0x257203, wireframe: true }),
+    "dark green 1": new THREE.MeshBasicMaterial({ color: 0x206a00, wireframe: true }),
+    "dark green 2": new THREE.MeshBasicMaterial({ color: 0x00450e, wireframe: true }),
+    "pinkBall": new THREE.MeshBasicMaterial({ color: 0xf757d9, wireframe: true }),
+    "redBall": new THREE.MeshBasicMaterial({ color: 0xd71b12, wireframe: true }),
+    "transparent": new THREE.MeshBasicMaterial({ color: 0x87CEFA, opacity: 0.1, transparent: true }),
 }
 
 /////////////////////
@@ -67,6 +67,9 @@ var keyS = false;
 var keyE = false;
 var keyD = false;
 
+var keyR = false;
+var keyF = false;
+
 /////////////////////
 /* CREATE SCENE(S) */
 /////////////////////
@@ -79,12 +82,12 @@ function createScene() {
     createCrane(0, 1, 0);
 
 
-	createContainer(0, 0, 50);
-	createCubeLoad(30, 10, 50);
-	createDodecahedronLoad(25, 10, 30);
-	createIcosahedronLoad(50, 5.9, 10);
-	createTorusLoad(60, 6, 65);
-	createTorusKnotLoad(70, 9.5, 40);
+    createContainer(0, 0, 50);
+    createCubeLoad(30, 10, 50);
+    createDodecahedronLoad(25, 10, 30);
+    createIcosahedronLoad(50, 5.9, 10);
+    createTorusLoad(60, 6, 65);
+    createTorusKnotLoad(70, 9.5, 40);
 
 
 }
@@ -375,7 +378,7 @@ function createUpperCrane(obj, x, y, z) {
 
     createTrolleyAssembly(upperCrane, x, y, z);
 
-	createHookBall(upperCrane, x, y, z);
+    createHookBall(upperCrane, x, y, z);
     obj.add(upperCrane);
 }
 
@@ -399,16 +402,16 @@ function createCrane(x, y, z) {
 
 /*========================= CREATE OBJECT CONTAINER===================================*/
 
-function addContainerBase(obj, x, y, z){
-	'use strict';
+function addContainerBase(obj, x, y, z) {
+    'use strict';
 
     var geometry = new THREE.BoxGeometry(20, 0, 35);
     var mesh = new THREE.Mesh(geometry, materials["dark green 2"]);
-    mesh.position.set(x, y , z);
+    mesh.position.set(x, y, z);
     obj.add(mesh);
 }
-function addContainerBigWall(obj, x, y, z){
-	'use strict';
+function addContainerBigWall(obj, x, y, z) {
+    'use strict';
 
 
     var geometry = new THREE.BoxGeometry(4, 20, 35);
@@ -417,8 +420,8 @@ function addContainerBigWall(obj, x, y, z){
     obj.add(mesh);
 }
 
-function addContainerSmallWall(obj, x, y, z){
-	'use strict';
+function addContainerSmallWall(obj, x, y, z) {
+    'use strict';
 
     var geometry = new THREE.BoxGeometry(28, 20, 4);
     var mesh = new THREE.Mesh(geometry, materials["dark green 1"]);
@@ -432,11 +435,11 @@ function createContainer(x, y, z) {
 
     var container = new THREE.Object3D();
 
-	addContainerBase(container, 0,  0,  0);
-	addContainerBigWall(container, 12,  10,  0);
-	addContainerBigWall(container, -12,  10,  0);
-	addContainerSmallWall(container, 0,  10,  19.5);
-	addContainerSmallWall(container, 0,  10,  -19.5);
+    addContainerBase(container, 0, 0, 0);
+    addContainerBigWall(container, 12, 10, 0);
+    addContainerBigWall(container, -12, 10, 0);
+    addContainerSmallWall(container, 0, 10, 19.5);
+    addContainerSmallWall(container, 0, 10, -19.5);
 
     scene.add(container);
 
@@ -447,10 +450,10 @@ function createContainer(x, y, z) {
 
 /*========================= CREATE OBJECT LOADS===================================*/
 
-function addCubeLoad(obj, x, y, z){
-	'use strict';
+function addCubeLoad(obj, x, y, z) {
+    'use strict';
 
-	var geometry = new THREE.BoxGeometry(10, 10, 10);
+    var geometry = new THREE.BoxGeometry(10, 10, 10);
     var mesh = new THREE.Mesh(geometry, materials["red"]);
     mesh.position.set(x, y / 2, z);
     obj.add(mesh);
@@ -460,14 +463,14 @@ function addDodecahedronLoad(obj, x, y, z) {
 
     var geometry = new THREE.DodecahedronGeometry(5);
     var mesh = new THREE.Mesh(geometry, materials["blue"]);
-    mesh.position.set(x, y /2, z);
+    mesh.position.set(x, y / 2, z);
     obj.add(mesh);
 }
 function addIcosahedronLoad(obj, x, y, z) {
     'use strict';
     var geometry = new THREE.IcosahedronGeometry(7);
     var mesh = new THREE.Mesh(geometry, materials["orange"]);
-    mesh.position.set(x, y , z);
+    mesh.position.set(x, y, z);
     scene.add(mesh);
 }
 function addTorusLoad(obj, x, y, z) {
@@ -475,7 +478,7 @@ function addTorusLoad(obj, x, y, z) {
 
     var geometry = new THREE.TorusGeometry(4, 2);
     var mesh = new THREE.Mesh(geometry, materials["pink"]);
-    mesh.position.set(x, y , z);
+    mesh.position.set(x, y, z);
     scene.add(mesh);
 }
 function addTorusKnotLoad(obj, x, y, z) {
@@ -483,159 +486,159 @@ function addTorusKnotLoad(obj, x, y, z) {
 
     var geometry = new THREE.TorusKnotGeometry(6, 1, 64, 8, 2, 3);
     var mesh = new THREE.Mesh(geometry, materials["purple"]);
-    mesh.position.set(x, y , z);
+    mesh.position.set(x, y, z);
     scene.add(mesh);
 }
 
 // Loads with colision spheres
-function createCubeLoad(x, y, z){
-	'use strict';
+function createCubeLoad(x, y, z) {
+    'use strict';
 
-	cube = new THREE.Object3D();
+    cube = new THREE.Object3D();
 
-	addCubeLoad(cube, x, y, z);
-	createCubeBall(cube, x, y, z);
+    addCubeLoad(cube, x, y, z);
+    createCubeBall(cube, x, y, z);
 
-	scene.add(cube);
+    scene.add(cube);
 }
 function createDodecahedronLoad(x, y, z) {
     'use strict';
 
-	dodecahedron = new THREE.Object3D();
+    dodecahedron = new THREE.Object3D();
 
-	addDodecahedronLoad(dodecahedron, x, y, z);
-	createDodeBall(dodecahedron, x, y, z);
+    addDodecahedronLoad(dodecahedron, x, y, z);
+    createDodeBall(dodecahedron, x, y, z);
 
     scene.add(dodecahedron);
 }
 function createIcosahedronLoad(x, y, z) {
     'use strict';
 
-	isocahedron = new THREE.Object3D();
+    isocahedron = new THREE.Object3D();
 
-	addIcosahedronLoad(isocahedron, x, y, z);
-	createIsoBall(isocahedron, x, y + 6, z);
+    addIcosahedronLoad(isocahedron, x, y, z);
+    createIsoBall(isocahedron, x, y + 6, z);
 
     scene.add(isocahedron);
 }
 function createTorusLoad(x, y, z) {
     'use strict';
 
-	torus = new THREE.Object3D();
+    torus = new THREE.Object3D();
 
-	addTorusLoad(torus, x, y, z);
-	createTorusBall(torus, x, y + 6, z);
+    addTorusLoad(torus, x, y, z);
+    createTorusBall(torus, x, y + 6, z);
 
     scene.add(torus);
 }
 function createTorusKnotLoad(x, y, z) {
     'use strict';
 
-	torusKnot = new THREE.Object3D();
-	addTorusKnotLoad(torusKnot, x, y, z);
-	createTorusKnotBall(torusKnot, x, y + 10, z);
+    torusKnot = new THREE.Object3D();
+    addTorusKnotLoad(torusKnot, x, y, z);
+    createTorusKnotBall(torusKnot, x, y + 10, z);
 
     scene.add(torusKnot);
 }
 /*======================= CREATE COLISION DETECTION SPHERES =======================*/
 
-function createHookBall(obj, x, y, z){
-	'use strict';
+function createHookBall(obj, x, y, z) {
+    'use strict';
 
-	ball = new THREE.Object3D();
+    ball = new THREE.Object3D();
 
-	ballGeometry = new THREE.SphereGeometry(2);
-	ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
+    ballGeometry = new THREE.SphereGeometry(2);
+    ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
 
-	ballMesh.material.opacity = 0.03;
+    ballMesh.material.opacity = 0.03;
     ballMesh.material.transparent = true;
 
-	ball.add(ballMesh);
+    ball.add(ballMesh);
     ball.position.set(x + 50, y - 23.5, z);
 
     obj.add(ball);
 }
 
-function createCubeBall(obj, x, y, z){
-	'use strict';
+function createCubeBall(obj, x, y, z) {
+    'use strict';
 
-	cubeBall = new THREE.Object3D();
+    cubeBall = new THREE.Object3D();
 
-	ballGeometry = new THREE.SphereGeometry(6);
-	ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
+    ballGeometry = new THREE.SphereGeometry(6);
+    ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
 
-	ballMesh.material.opacity = 0.03;
+    ballMesh.material.opacity = 0.03;
     ballMesh.material.transparent = true;
 
-	cubeBall.add(ballMesh);
+    cubeBall.add(ballMesh);
     cubeBall.position.set(x, y / 2, z);
 
     obj.add(cubeBall);
 }
 
-function createDodeBall(obj, x, y, z){
-	'use strict';
+function createDodeBall(obj, x, y, z) {
+    'use strict';
 
-	dodeBall = new THREE.Object3D();
+    dodeBall = new THREE.Object3D();
 
-	ballGeometry = new THREE.SphereGeometry(5.5);
-	ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
+    ballGeometry = new THREE.SphereGeometry(5.5);
+    ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
 
-	ballMesh.material.opacity = 0.03;
+    ballMesh.material.opacity = 0.03;
     ballMesh.material.transparent = true;
 
-	dodeBall.add(ballMesh);
+    dodeBall.add(ballMesh);
     dodeBall.position.set(x, y / 2, z);
 
     obj.add(dodeBall);
 }
 
-function createIsoBall(obj, x, y, z){
-	'use strict';
+function createIsoBall(obj, x, y, z) {
+    'use strict';
 
-	isoBall = new THREE.Object3D();
+    isoBall = new THREE.Object3D();
 
-	ballGeometry = new THREE.SphereGeometry(7);
-	ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
+    ballGeometry = new THREE.SphereGeometry(7);
+    ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
 
-	ballMesh.material.opacity = 0.03;
+    ballMesh.material.opacity = 0.03;
     ballMesh.material.transparent = true;
 
-	isoBall.add(ballMesh);
+    isoBall.add(ballMesh);
     isoBall.position.set(x, y / 2, z);
 
     obj.add(isoBall);
 }
 
-function createTorusBall(obj, x, y, z){
-	'use strict';
+function createTorusBall(obj, x, y, z) {
+    'use strict';
 
-	torusBall = new THREE.Object3D();
+    torusBall = new THREE.Object3D();
 
-	ballGeometry = new THREE.SphereGeometry(6);
-	ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
+    ballGeometry = new THREE.SphereGeometry(6);
+    ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
 
-	ballMesh.material.opacity = 0.03;
+    ballMesh.material.opacity = 0.03;
     ballMesh.material.transparent = true;
 
-	torusBall.add(ballMesh);
+    torusBall.add(ballMesh);
     torusBall.position.set(x, y / 2, z);
 
     obj.add(torusBall);
 }
 
-function createTorusKnotBall(obj, x, y, z){
-	'use strict';
+function createTorusKnotBall(obj, x, y, z) {
+    'use strict';
 
-	torusKnotBall = new THREE.Object3D();
+    torusKnotBall = new THREE.Object3D();
 
-	ballGeometry = new THREE.SphereGeometry(10);
-	ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
+    ballGeometry = new THREE.SphereGeometry(10);
+    ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
 
-	ballMesh.material.opacity = 0.03;
+    ballMesh.material.opacity = 0.03;
     ballMesh.material.transparent = true;
 
-	torusKnotBall.add(ballMesh);
+    torusKnotBall.add(ballMesh);
     torusKnotBall.position.set(x, y / 2, z);
 
     obj.add(torusKnotBall);
@@ -647,30 +650,30 @@ function createTorusKnotBall(obj, x, y, z){
 //////////////////////
 function checkCollisions() {
     'use strict';
-	if(checkSphereCollision(ball, cubeBall, 2, 6) == true){
-		ball.children[0].material.color.setHex(0xff0000);
+    if (checkSphereCollision(ball, cubeBall, 2, 6) == true) {
+        ball.children[0].material.color.setHex(0xff0000);
 
-	}
-	else if(checkSphereCollision(ball, dodeBall, 2, 5.5) == true){
-		ball.children[0].material.color.setHex(0xff0000);
-	}
-	else if(checkSphereCollision(ball, isoBall, 2, 7) == true){
-		ball.children[0].material.color.setHex(0xff0000);
-	}
-	else if(checkSphereCollision(ball, torusBall, 2, 6) == true){
-		ball.children[0].material.color.setHex(0xff0000);
-	}
-	else if(checkSphereCollision(ball, torusKnotBall, 2, 10) == true){
-		ball.children[0].material.color.setHex(0xff0000);
-	}
-	else{
-		ball.children[0].material.color.setHex(0xf757d9);
-	}
+    }
+    else if (checkSphereCollision(ball, dodeBall, 2, 5.5) == true) {
+        ball.children[0].material.color.setHex(0xff0000);
+    }
+    else if (checkSphereCollision(ball, isoBall, 2, 7) == true) {
+        ball.children[0].material.color.setHex(0xff0000);
+    }
+    else if (checkSphereCollision(ball, torusBall, 2, 6) == true) {
+        ball.children[0].material.color.setHex(0xff0000);
+    }
+    else if (checkSphereCollision(ball, torusKnotBall, 2, 10) == true) {
+        ball.children[0].material.color.setHex(0xff0000);
+    }
+    else {
+        ball.children[0].material.color.setHex(0xf757d9);
+    }
 
 }
 
 function checkSphereCollision(sphere1, sphere2, radius1, radius2) {
-	'use strict';
+    'use strict';
     var center1 = sphere1.position.clone();
     var center2 = sphere2.position.clone();
 
@@ -704,8 +707,27 @@ function update() {
     }
     if (keyQ) {
         rotateCraneY(1, delta);
-    //upperCrane.rotation.y += 0.01;
-	checkCollisions();
+        //upperCrane.rotation.y += 0.01;
+        checkCollisions();
+    }
+    if (keyW) {
+        moveTrolley(1, delta);
+    }
+    if (keyS) {
+        moveTrolley(-1, delta);
+    }
+    if (keyE) {
+        moveHook(1, delta);
+    }
+    if (keyD) {
+        moveHook(-1, delta);
+    }
+    if (keyR) {
+        hookOpenAngle(1, delta);
+    }
+    if (keyF) {
+        hookOpenAngle(-1, delta);
+    }
 }
 
 /////////////
@@ -728,7 +750,6 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
     clock = new THREE.Clock();
-    //clock.start();
 
     createScene();
     createCamera();
@@ -769,12 +790,53 @@ function onResize() {
 }
 
 //////////////////////////////
-/* CRANE ROTATION FUNCTIONS */
+/* CRANE MOVEMENT FUNCTIONS */
 //////////////////////////////
 
 function rotateCraneY(direction, delta) {
     upperCrane.rotation.y += direction * 0.1 * delta;
 }
+
+function moveTrolley(direction, delta) {
+    if (trolleyAssembly.position.x >= (upperCrane.position.x + 1.25) && direction == 1) {
+        return;
+    } else if (trolleyAssembly.position.x <= (upperCrane.position.x - 42) && direction == -1) {
+        return;
+    } else {
+        trolleyAssembly.position.x += direction * 3 * delta;
+    }
+}
+
+function moveHook(direction, delta) {
+    if (cableMesh.scale.y <= 0.1 && direction == 1) {
+        return;
+    } else if (cableMesh.scale.y >= 5.8 && direction == -1) {
+        return;
+    } else {
+        hookAssembly.children[2].position.y += (direction * delta * 4);
+        hookAssembly.children[3].position.y += (direction * delta * 4);
+        hookAssembly.children[4].position.y += (direction * delta * 4);
+        hookAssembly.children[5].position.y += (direction * delta * 4);
+        hookMesh.position.y += (direction * delta * 4);
+        cableMesh.position.y += (direction * delta * 2);
+        cableMesh.scale.y += ((-1) * direction * delta) / 2.5;
+    }
+}
+
+function hookOpenAngle(direction, delta) {
+    var angle = direction ? (Math.PI / 4) * delta : 0;
+
+    hookAssembly.children[2].rotation.x += angle;
+    hookAssembly.children[3].rotation.x += angle;
+    hookAssembly.children[4].rotation.x -= angle;
+    hookAssembly.children[5].rotation.x -= angle;
+
+    hookAssembly.children[2].rotation.z += angle;
+    hookAssembly.children[3].rotation.z -= angle;
+    hookAssembly.children[4].rotation.z += angle;
+    hookAssembly.children[5].rotation.z -= angle;
+}
+
 
 ///////////////////////
 /* KEY DOWN CALLBACK */
@@ -815,9 +877,27 @@ function onKeyDown(e) {
             //upperCrane.rotation.y -= 0.1;
             keyA = true;
             break;
-		/*
-		//Debug para as colisoes
-		case 38: // Seta para cima
+        case 87: // w for trolley movement
+            keyW = true;
+            break;
+        case 83: // s for trolley movement
+            keyS = true;
+            break;
+        case 69: // e for hook movement
+            keyE = true;
+            break;
+        case 68: // d for hook movement
+            keyD = true;
+            break;
+        case 70: // f for hook open/close
+            keyF = true;
+            break;
+        case 82: // r for hook open/close
+            keyR = true;
+            break;
+        /*
+        //Debug para as colisoes
+        case 38: // Seta para cima
             ball.position.z -= 1; // Aumenta a posição em 1 unidade no eixo y
             break;
         case 40: // Seta para baixo
@@ -829,13 +909,13 @@ function onKeyDown(e) {
         case 37: // Seta para esquerda
             ball.position.x -= 1; // Diminui a posição em 1 unidade no eixo x
             break;
-		case 79: // o
+        case 79: // o
             ball.position.y += 1;
             break;
         case 80: // Seta para esquerda
             ball.position.y -= 1;
             break;
-		*/
+        */
 
     }
 }
@@ -851,6 +931,24 @@ function onKeyUp(e) {
             break;
         case 65: // a for negative crane rotation
             keyA = false;
+            break;
+        case 87: // w for trolley movement
+            keyW = false;
+            break;
+        case 83: // s for trolley movement
+            keyS = false;
+            break;
+        case 69: // e for hook movement
+            keyE = false;
+            break;
+        case 68: // d for hook movement
+            keyD = false;
+            break;
+        case 70: // f for hook open/close
+            keyF = false;
+            break;
+        case 82: // r for hook open/close
+            keyR = false;
             break;
     }
 }
