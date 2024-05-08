@@ -58,6 +58,7 @@ var materials = {
 /////////////////////
 /* Keyboard Inputs */
 /////////////////////
+var keys;
 var keyA = false;
 var keyQ = false;
 
@@ -704,29 +705,52 @@ function update() {
     var delta = clock.getDelta();
     if (keyA) {
         rotateCraneY(-1, delta);
+        document.getElementById("A").style.backgroundColor = "grey";
+    } else {
+        document.getElementById("A").style.backgroundColor = "";
     }
     if (keyQ) {
         rotateCraneY(1, delta);
-        //upperCrane.rotation.y += 0.01;
+        document.getElementById("Q").style.backgroundColor = "grey";
         checkCollisions();
+    } else {
+        document.getElementById("Q").style.backgroundColor = "";
     }
     if (keyW) {
         moveTrolley(1, delta);
+        document.getElementById("W").style.backgroundColor = "grey";
+    } else {
+        document.getElementById("W").style.backgroundColor = "";
     }
     if (keyS) {
         moveTrolley(-1, delta);
+        document.getElementById("S").style.backgroundColor = "grey";
+    } else {
+        document.getElementById("S").style.backgroundColor = "";
     }
     if (keyE) {
         moveHook(1, delta);
+        document.getElementById("E").style.backgroundColor = "grey";
+    } else {
+        document.getElementById("E").style.backgroundColor = "";
     }
     if (keyD) {
         moveHook(-1, delta);
+        document.getElementById("D").style.backgroundColor = "grey";
+    } else {
+        document.getElementById("D").style.backgroundColor = "";
     }
     if (keyR) {
         hookOpenAngle(1, delta);
+        document.getElementById("R").style.backgroundColor = "grey";
+    } else {
+        document.getElementById("R").style.backgroundColor = "";
     }
     if (keyF) {
         hookOpenAngle(-1, delta);
+        document.getElementById("F").style.backgroundColor = "grey";
+    } else {
+        document.getElementById("F").style.backgroundColor = "";
     }
 }
 
@@ -753,6 +777,7 @@ function init() {
 
     createScene();
     createCamera();
+    createHUD();
 
     render();
 
@@ -837,7 +862,33 @@ function hookOpenAngle(direction, delta) {
     hookAssembly.children[5].rotation.z -= angle;
 }
 
+////////////////
+/* CREATE HUD */
+////////////////
+function createHUD() {
+    // Create HUD element
+    var hudElement = document.createElement('div');
+    hudElement.setAttribute('id', 'hud');
 
+    keys = ['Q', 'A', 'W', 'S', 'E', 'D', 'R', 'F'];
+    document.body.appendChild(hudElement);
+    var keyRow1 = document.createElement('div');
+    var keyRow2 = document.createElement('div');
+    hudElement.appendChild(keyRow1);
+    hudElement.appendChild(keyRow2);
+    for (let index = 0; index < 8; index += 2) {
+        var keyElement = document.createElement('span');
+        keyElement.setAttribute('id', keys[index]);
+        keyElement.innerHTML = keys[index];
+        keyRow1.appendChild(keyElement);
+    }
+    for (let index = 1; index < 8; index += 2) {
+        var keyElement = document.createElement('span');
+        keyElement.setAttribute('id', keys[index]);
+        keyElement.innerHTML = keys[index];
+        keyRow2.appendChild(keyElement);
+    }
+}
 ///////////////////////
 /* KEY DOWN CALLBACK */
 ///////////////////////
