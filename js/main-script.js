@@ -13,9 +13,8 @@ var camera, scene, renderer, aspectRatio, clock;
 var activeCamera, frontCamera, sideCamera, topCamera, orthographicCamera, perspectiveCamera, mobileCamera;
 
 var materials;
-var crane, lowerCrane, upperCrane, trolleyAssembly, hookAssembly;
+var crane, lowerCrane, upperCrane, trolleyAssembly, hookAssembly, hook;
 var cube, dodecahedron, isocahedron, torus, torusKnot;
-var ball, cubeBall, dodeBall, isoBall, torusBall, torusKnotBall;
 
 var baseGeometry, baseMesh;
 var towerGeometry, towerMesh;
@@ -36,7 +35,6 @@ var cableGeometry, cableMesh;
 var hookGeometry, hookMesh;
 var hookToothGeometry, hookToothMesh;
 
-var ballGeometry, ballMesh;
 
 var materials = {
     "dark grey": new THREE.MeshBasicMaterial({ color: 0x444745, wireframe: true }),
@@ -58,6 +56,7 @@ var materials = {
 /////////////////////
 /* Keyboard Inputs */
 /////////////////////
+var keys, numKeys;
 var keyA = false;
 var keyQ = false;
 
@@ -69,6 +68,10 @@ var keyD = false;
 
 var keyR = false;
 var keyF = false;
+
+var activeKey = 1;
+var prevKey = 1;
+var key7 = false;
 
 /////////////////////
 /* CREATE SCENE(S) */
@@ -82,8 +85,9 @@ function createScene() {
     createCrane(0, 1, 0);
 
 
+
     createContainer(0, 0, 50);
-    createCubeLoad(30, 10, 50);
+    createCubeLoad(30, 10, 45);
     createDodecahedronLoad(25, 10, 30);
     createIcosahedronLoad(50, 5.9, 10);
     createTorusLoad(60, 6, 65);
@@ -171,10 +175,11 @@ function createLowerCrane(obj, x, y, z) {
     'use strict';
     lowerCrane = new THREE.Object3D();
 
-    createCraneBase(crane, x, y, z);
-    createCraneTower(crane, x, y + 31, z);
+    createCraneBase(lowerCrane, x, y, z);
+    createCraneTower(lowerCrane, x, y + 31, z);
 
-    obj.add(lowerCrane);
+
+	obj.add(lowerCrane);
 }
 
 // Upper crane definitions
@@ -303,12 +308,14 @@ function createCable(obj, x, y, z) {
 function createHook(obj, x, y, z) {
     'use strict';
 
+	hook = new THREE.Object3D();
+
     hookGeometry = new THREE.BoxGeometry(1, 1, 1);
     hookMesh = new THREE.Mesh(hookGeometry, materials["dark grey"]);
 
-    hookMesh.position.set(x + 50, y - 23.5, z);
-
-    obj.add(hookMesh);
+	hook.add(hookMesh);
+    hook.position.set(x + 50, y - 23.5, z);
+    obj.add(hook);
 }
 
 function createHookTooth(obj, x, y, z) {
@@ -335,6 +342,7 @@ function createHookAssembly(obj, x, y, z) {
     createHookTooth(hookAssembly, x - 0.5, y, z + 0.5);
     createHookTooth(hookAssembly, x + 0.5, y, z - 0.5);
     createHookTooth(hookAssembly, x + 0.5, y, z + 0.5);
+
 
 
     obj.add(hookAssembly);
@@ -378,8 +386,10 @@ function createUpperCrane(obj, x, y, z) {
 
     createTrolleyAssembly(upperCrane, x, y, z);
 
-    createHookBall(upperCrane, x, y, z);
-    obj.add(upperCrane);
+
+	upperCrane.add(new THREE.AxesHelper(30));
+
+	obj.add(upperCrane);
 }
 
 function createCrane(x, y, z) {
@@ -393,7 +403,9 @@ function createCrane(x, y, z) {
     crane.add(lowerCrane);
     crane.add(upperCrane);
 
+
     scene.add(crane);
+
 
     crane.position.x = x;
     crane.position.y = y;
@@ -449,205 +461,74 @@ function createContainer(x, y, z) {
 }
 
 /*========================= CREATE OBJECT LOADS===================================*/
+function createCubeLoad(x, y, z){
+	'use strict';
 
-function addCubeLoad(obj, x, y, z) {
-    'use strict';
+	cube = new THREE.Object3D();
 
-    var geometry = new THREE.BoxGeometry(10, 10, 10);
+	var geometry = new THREE.BoxGeometry(10, 10, 10);
     var mesh = new THREE.Mesh(geometry, materials["red"]);
-    mesh.position.set(x, y / 2, z);
-    obj.add(mesh);
-}
-function addDodecahedronLoad(obj, x, y, z) {
-    'use strict';
 
-    var geometry = new THREE.DodecahedronGeometry(5);
-    var mesh = new THREE.Mesh(geometry, materials["blue"]);
-    mesh.position.set(x, y / 2, z);
-    obj.add(mesh);
-}
-function addIcosahedronLoad(obj, x, y, z) {
-    'use strict';
-    var geometry = new THREE.IcosahedronGeometry(7);
-    var mesh = new THREE.Mesh(geometry, materials["orange"]);
-    mesh.position.set(x, y, z);
-    scene.add(mesh);
-}
-function addTorusLoad(obj, x, y, z) {
-    'use strict';
-
-    var geometry = new THREE.TorusGeometry(4, 2);
-    var mesh = new THREE.Mesh(geometry, materials["pink"]);
-    mesh.position.set(x, y, z);
-    scene.add(mesh);
-}
-function addTorusKnotLoad(obj, x, y, z) {
-    'use strict';
-
-    var geometry = new THREE.TorusKnotGeometry(6, 1, 64, 8, 2, 3);
-    var mesh = new THREE.Mesh(geometry, materials["purple"]);
-    mesh.position.set(x, y, z);
-    scene.add(mesh);
-}
-
-// Loads with colision spheres
-function createCubeLoad(x, y, z) {
-    'use strict';
-
-    cube = new THREE.Object3D();
-
-    addCubeLoad(cube, x, y, z);
-    createCubeBall(cube, x, y, z);
+	cube.add(mesh);
+    cube.position.set(x, y / 2, z);
 
     scene.add(cube);
 }
 function createDodecahedronLoad(x, y, z) {
     'use strict';
 
-    dodecahedron = new THREE.Object3D();
+	dodecahedron = new THREE.Object3D();
 
-    addDodecahedronLoad(dodecahedron, x, y, z);
-    createDodeBall(dodecahedron, x, y, z);
+    var geometry = new THREE.DodecahedronGeometry(5);
+    var mesh = new THREE.Mesh(geometry, materials["blue"]);
+
+	dodecahedron.add(mesh)
+    dodecahedron.position.set(x, y / 2, z);
+
 
     scene.add(dodecahedron);
 }
 function createIcosahedronLoad(x, y, z) {
     'use strict';
 
-    isocahedron = new THREE.Object3D();
+	isocahedron = new THREE.Object3D();
 
-    addIcosahedronLoad(isocahedron, x, y, z);
-    createIsoBall(isocahedron, x, y + 6, z);
+    var geometry = new THREE.IcosahedronGeometry(7);
+    var mesh = new THREE.Mesh(geometry, materials["orange"]);
 
+	isocahedron.add(mesh);
+    isocahedron.position.set(x, y , z);
     scene.add(isocahedron);
 }
 function createTorusLoad(x, y, z) {
     'use strict';
 
-    torus = new THREE.Object3D();
+	torus = new THREE.Object3D();
 
-    addTorusLoad(torus, x, y, z);
-    createTorusBall(torus, x, y + 6, z);
+    var geometry = new THREE.TorusGeometry(4, 2);
+    var mesh = new THREE.Mesh(geometry, materials["pink"]);
 
+	torus.add(mesh);
+    torus.position.set(x, y , z);
     scene.add(torus);
 }
 function createTorusKnotLoad(x, y, z) {
     'use strict';
 
-    torusKnot = new THREE.Object3D();
-    addTorusKnotLoad(torusKnot, x, y, z);
-    createTorusKnotBall(torusKnot, x, y + 10, z);
+	torusKnot = new THREE.Object3D();
 
+    var geometry = new THREE.TorusKnotGeometry(6, 1, 64, 8, 2, 3);
+    var mesh = new THREE.Mesh(geometry, materials["purple"]);
+
+	torusKnot.add(mesh);
+    torusKnot.position.set(x, y , z);
     scene.add(torusKnot);
 }
-/*======================= CREATE COLISION DETECTION SPHERES =======================*/
-
-function createHookBall(obj, x, y, z) {
-    'use strict';
-
-    ball = new THREE.Object3D();
-
-    ballGeometry = new THREE.SphereGeometry(2);
-    ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
-
-    ballMesh.material.opacity = 0.03;
-    ballMesh.material.transparent = true;
-
-    ball.add(ballMesh);
-    ball.position.set(x + 50, y - 23.5, z);
-
-    obj.add(ball);
-}
-
-function createCubeBall(obj, x, y, z) {
-    'use strict';
-
-    cubeBall = new THREE.Object3D();
-
-    ballGeometry = new THREE.SphereGeometry(6);
-    ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
-
-    ballMesh.material.opacity = 0.03;
-    ballMesh.material.transparent = true;
-
-    cubeBall.add(ballMesh);
-    cubeBall.position.set(x, y / 2, z);
-
-    obj.add(cubeBall);
-}
-
-function createDodeBall(obj, x, y, z) {
-    'use strict';
-
-    dodeBall = new THREE.Object3D();
-
-    ballGeometry = new THREE.SphereGeometry(5.5);
-    ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
-
-    ballMesh.material.opacity = 0.03;
-    ballMesh.material.transparent = true;
-
-    dodeBall.add(ballMesh);
-    dodeBall.position.set(x, y / 2, z);
-
-    obj.add(dodeBall);
-}
-
-function createIsoBall(obj, x, y, z) {
-    'use strict';
-
-    isoBall = new THREE.Object3D();
-
-    ballGeometry = new THREE.SphereGeometry(7);
-    ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
-
-    ballMesh.material.opacity = 0.03;
-    ballMesh.material.transparent = true;
-
-    isoBall.add(ballMesh);
-    isoBall.position.set(x, y / 2, z);
-
-    obj.add(isoBall);
-}
-
-function createTorusBall(obj, x, y, z) {
-    'use strict';
-
-    torusBall = new THREE.Object3D();
-
-    ballGeometry = new THREE.SphereGeometry(6);
-    ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
-
-    ballMesh.material.opacity = 0.03;
-    ballMesh.material.transparent = true;
-
-    torusBall.add(ballMesh);
-    torusBall.position.set(x, y / 2, z);
-
-    obj.add(torusBall);
-}
-
-function createTorusKnotBall(obj, x, y, z) {
-    'use strict';
-
-    torusKnotBall = new THREE.Object3D();
-
-    ballGeometry = new THREE.SphereGeometry(10);
-    ballMesh = new THREE.Mesh(ballGeometry, materials["pinkBall"]);
-
-    ballMesh.material.opacity = 0.03;
-    ballMesh.material.transparent = true;
-
-    torusKnotBall.add(ballMesh);
-    torusKnotBall.position.set(x, y / 2, z);
-
-    obj.add(torusKnotBall);
-}
-
 
 //////////////////////
 /* CHECK COLLISIONS */
 //////////////////////
+/*
 function checkCollisions() {
     'use strict';
     if (checkSphereCollision(ball, cubeBall, 2, 6) == true) {
@@ -671,15 +552,20 @@ function checkCollisions() {
     }
 
 }
+*/
+function checkCollisions(sphere1, sphere2, radius1, radius2) {
+	'use strict';
+    var x1 = sphere1.position.x;
+    var y1 = sphere1.position.y;
+    var z1 = sphere1.position.z;
 
-function checkSphereCollision(sphere1, sphere2, radius1, radius2) {
-    'use strict';
-    var center1 = sphere1.position.clone();
-    var center2 = sphere2.position.clone();
+    var x2 = sphere2.position.x;
+    var y2 = sphere2.position.y;
+    var z2 = sphere2.position.z;
 
-    var distance = center1.distanceTo(center2);
+    var distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) + Math.pow(z2 - z1, 2));
 
-    if (distance < radius1 + radius2) {
+    if (distance <= radius1 + radius2) {
         return true;
     } else {
         return false;
@@ -687,13 +573,15 @@ function checkSphereCollision(sphere1, sphere2, radius1, radius2) {
 }
 
 
-
 ///////////////////////
 /* HANDLE COLLISIONS */
 ///////////////////////
 function handleCollisions() {
     'use strict';
-
+	if (checkCollisions(hook, cube, 2, 6) == true) {
+		// Atualiza a posição do cubo para a posição do gancho
+        cube.children[0].material.color.setHex(0x0b0fd3);
+	}
 }
 
 ////////////
@@ -702,32 +590,67 @@ function handleCollisions() {
 function update() {
     'use strict';
     var delta = clock.getDelta();
-    if (keyA) {
+	if (keyA) {
         rotateCraneY(-1, delta);
+        document.getElementById("A").style.backgroundColor = "grey";
+    } else {
+        document.getElementById("A").style.backgroundColor = "";
     }
     if (keyQ) {
         rotateCraneY(1, delta);
-        //upperCrane.rotation.y += 0.01;
-        checkCollisions();
+        document.getElementById("Q").style.backgroundColor = "grey";
+    } else {
+        document.getElementById("Q").style.backgroundColor = "";
     }
     if (keyW) {
         moveTrolley(1, delta);
+        document.getElementById("W").style.backgroundColor = "grey";
+    } else {
+        document.getElementById("W").style.backgroundColor = "";
     }
     if (keyS) {
         moveTrolley(-1, delta);
+        document.getElementById("S").style.backgroundColor = "grey";
+    } else {
+        document.getElementById("S").style.backgroundColor = "";
     }
     if (keyE) {
         moveHook(1, delta);
+        document.getElementById("E").style.backgroundColor = "grey";
+    } else {
+        document.getElementById("E").style.backgroundColor = "";
     }
     if (keyD) {
         moveHook(-1, delta);
+        document.getElementById("D").style.backgroundColor = "grey";
+    } else {
+        document.getElementById("D").style.backgroundColor = "";
     }
     if (keyR) {
         hookOpenAngle(1, delta);
+        document.getElementById("R").style.backgroundColor = "grey";
+    } else {
+        document.getElementById("R").style.backgroundColor = "";
     }
     if (keyF) {
         hookOpenAngle(-1, delta);
+        document.getElementById("F").style.backgroundColor = "grey";
+    } else {
+        document.getElementById("F").style.backgroundColor = "";
     }
+
+    if (key7) {
+        document.getElementById("7").style.backgroundColor = "grey";
+    }
+    else {
+        document.getElementById("7").style.backgroundColor = "";
+    }
+
+    document.getElementById(numKeys[prevKey - 1]).style.backgroundColor = "";
+    document.getElementById(numKeys[activeKey - 1]).style.backgroundColor = "grey"
+
+	handleCollisions();
+
 }
 
 /////////////
@@ -753,6 +676,7 @@ function init() {
 
     createScene();
     createCamera();
+	createHUD();
 
     render();
 
@@ -767,11 +691,12 @@ function init() {
 function animate() {
     'use strict';
 
-    requestAnimationFrame(animate);
 
     update();
 
     render();
+
+    requestAnimationFrame(animate);
 }
 
 ////////////////////////////
@@ -820,6 +745,7 @@ function moveHook(direction, delta) {
         hookMesh.position.y += (direction * delta * 4);
         cableMesh.position.y += (direction * delta * 2);
         cableMesh.scale.y += ((-1) * direction * delta) / 2.5;
+
     }
 }
 
@@ -837,6 +763,48 @@ function hookOpenAngle(direction, delta) {
     hookAssembly.children[5].rotation.z -= angle;
 }
 
+////////////////
+/* CREATE HUD */
+////////////////
+function createHUD() {
+    // Create HUD element
+    var hudElement = document.createElement('div');
+    hudElement.setAttribute('id', 'hud');
+    document.body.appendChild(hudElement);
+
+    var numKeysRow = document.createElement('div');
+    numKeysRow.setAttribute('id', 'numKeysRow');
+    hudElement.appendChild(numKeysRow);
+
+    numKeys = ['1', '2', '3', '4', '5', '6', '7'];
+    keys = ['Q', 'A', 'W', 'S', 'E', 'D', 'R', 'F'];
+
+    var keyRow1 = document.createElement('div');
+    var keyRow2 = document.createElement('div');
+    hudElement.appendChild(keyRow1);
+    hudElement.appendChild(keyRow2);
+
+    var keyElement;
+    for (let index = 0; index < 7; index++) {
+        keyElement = document.createElement('span');
+        keyElement.setAttribute('id', numKeys[index]);
+        keyElement.innerHTML = numKeys[index];
+        numKeysRow.appendChild(keyElement);
+    }
+
+    for (let index = 0; index < 8; index += 2) {
+        keyElement = document.createElement('span');
+        keyElement.setAttribute('id', keys[index]);
+        keyElement.innerHTML = keys[index];
+        keyRow1.appendChild(keyElement);
+    }
+    for (let index = 1; index < 8; index += 2) {
+        keyElement = document.createElement('span');
+        keyElement.setAttribute('id', keys[index]);
+        keyElement.innerHTML = keys[index];
+        keyRow2.appendChild(keyElement);
+    }
+}
 
 ///////////////////////
 /* KEY DOWN CALLBACK */
@@ -846,21 +814,33 @@ function onKeyDown(e) {
     switch (e.keyCode) {
         case 49: //1
             activeCamera = frontCamera;
+			prevKey = activeKey;
+			activeKey = 1;
             break;
         case 50: //2
             activeCamera = sideCamera;
+			prevKey = activeKey;
+			activeKey = 2;
             break;
         case 51: //3
             activeCamera = topCamera;
+			prevKey = activeKey;
+			activeKey = 3;
             break;
         case 52: //4
             activeCamera = orthographicCamera;
+			prevKey = activeKey;
+			activeKey = 4;
             break;
         case 53: //5
             activeCamera = perspectiveCamera;
+			prevKey = activeKey;
+			activeKey = 5;
             break;
         case 54: //6
             activeCamera = mobileCamera;
+			prevKey = activeKey;
+			activeKey = 6;
             break;
         case 55: //7
             for (var key in materials) {
@@ -868,6 +848,11 @@ function onKeyDown(e) {
                     materials[key].wireframe = !materials[key].wireframe;
                 }
             }
+			if(key7){
+				key7 = false;
+			}else{
+				key7 = true;
+			}
             break;
         case 81: // q for crane rotation
             keyQ = true;
@@ -895,27 +880,28 @@ function onKeyDown(e) {
         case 82: // r for hook open/close
             keyR = true;
             break;
-        /*
+
+		/*
         //Debug para as colisoes
         case 38: // Seta para cima
-            ball.position.z -= 1; // Aumenta a posição em 1 unidade no eixo y
+            dodecahedron.position.z -= 1; // Aumenta a posição em 1 unidade no eixo y
             break;
         case 40: // Seta para baixo
-            ball.position.z += 1; // Diminui a posição em 1 unidade no eixo y
+            dodecahedron.position.z += 1; // Diminui a posição em 1 unidade no eixo y
             break;
         case 39: // Seta para direita
-            ball.position.x += 1; // Aumenta a posição em 1 unidade no eixo x
+            dodecahedron.position.x += 1; // Aumenta a posição em 1 unidade no eixo x
             break;
         case 37: // Seta para esquerda
-            ball.position.x -= 1; // Diminui a posição em 1 unidade no eixo x
+            dodecahedron.position.x -= 1; // Diminui a posição em 1 unidade no eixo x
             break;
         case 79: // o
-            ball.position.y += 1;
+            dodecahedron.position.y += 1;
             break;
         case 80: // Seta para esquerda
-            ball.position.y -= 1;
+            dodecahedron.position.y -= 1;
             break;
-        */
+		*/
 
     }
 }
