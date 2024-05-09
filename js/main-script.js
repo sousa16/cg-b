@@ -58,7 +58,7 @@ var materials = {
 /////////////////////
 /* Keyboard Inputs */
 /////////////////////
-var keys;
+var keys, numKeys;
 var keyA = false;
 var keyQ = false;
 
@@ -70,6 +70,10 @@ var keyD = false;
 
 var keyR = false;
 var keyF = false;
+
+var activeKey = 1;
+var prevKey = 1;
+var key7 = false;
 
 /////////////////////
 /* CREATE SCENE(S) */
@@ -123,8 +127,7 @@ function createCamera() {
 
     // Mobile perspective camera
     mobileCamera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
-    mobileCamera.position.set(50, 23.5, 0); // Position it at the hook
-
+    mobileCamera.position.set(50, 23.5, 0)
     activeCamera = frontCamera;
 
     // Make sure they're pointing towards the scene
@@ -133,7 +136,7 @@ function createCamera() {
     topCamera.lookAt(scene.position);
     orthographicCamera.lookAt(scene.position);
     perspectiveCamera.lookAt(scene.position);
-    mobileCamera.lookAt(new THREE.Vector3(mobileCamera.position.x, 0, mobileCamera.position.z)); // Orient it to look directly over the xOz plane
+    mobileCamera.lookAt(new THREE.Vector3(mobileCamera.position.x, 0, mobileCamera.position.z));
 }
 
 
@@ -308,7 +311,6 @@ function createHook(obj, x, y, z) {
     hookMesh = new THREE.Mesh(hookGeometry, materials["dark grey"]);
 
     hookMesh.position.set(x + 50, y - 23.5, z);
-
     obj.add(hookMesh);
 }
 
@@ -336,7 +338,6 @@ function createHookAssembly(obj, x, y, z) {
     createHookTooth(hookAssembly, x - 0.5, y, z + 0.5);
     createHookTooth(hookAssembly, x + 0.5, y, z - 0.5);
     createHookTooth(hookAssembly, x + 0.5, y, z + 0.5);
-
 
     obj.add(hookAssembly);
 }
@@ -752,6 +753,16 @@ function update() {
     } else {
         document.getElementById("F").style.backgroundColor = "";
     }
+
+    if (key7) {
+        document.getElementById("7").style.backgroundColor = "grey";
+    }
+    else {
+        document.getElementById("7").style.backgroundColor = "";
+    }
+
+    document.getElementById(numKeys[prevKey - 1]).style.backgroundColor = "";
+    document.getElementById(numKeys[activeKey - 1]).style.backgroundColor = "grey";
 }
 
 /////////////
@@ -820,22 +831,20 @@ function onResize() {
 
 function rotateCraneY(direction, delta) {
     upperCrane.rotation.y += direction * 0.1 * delta;
+    mobileCamera.rotation.y += direction * 0.1 * delta;
 }
 
 function moveTrolley(direction, delta) {
-    if (trolleyAssembly.position.x >= (upperCrane.position.x + 1.25) && direction == 1) {
-        return;
-    } else if (trolleyAssembly.position.x <= (upperCrane.position.x - 42) && direction == -1) {
+    if (trolleyAssembly.position.x >= (upperCrane.position.x + 1.25) && direction == 1 || trolleyAssembly.position.x <= (upperCrane.position.x - 42) && direction == -1) {
         return;
     } else {
         trolleyAssembly.position.x += direction * 3 * delta;
+        mobileCamera.position.x += direction * 3 * delta;
     }
 }
 
 function moveHook(direction, delta) {
-    if (cableMesh.scale.y <= 0.1 && direction == 1) {
-        return;
-    } else if (cableMesh.scale.y >= 5.8 && direction == -1) {
+    if (cableMesh.scale.y <= 0.1 && direction == 1 || cableMesh.scale.y >= 5.8 && direction == -1) {
         return;
     } else {
         hookAssembly.children[2].position.y += (direction * delta * 4);
@@ -845,21 +854,28 @@ function moveHook(direction, delta) {
         hookMesh.position.y += (direction * delta * 4);
         cableMesh.position.y += (direction * delta * 2);
         cableMesh.scale.y += ((-1) * direction * delta) / 2.5;
+        mobileCamera.position.y += (direction * delta * 4);
     }
 }
 
 function hookOpenAngle(direction, delta) {
-    var angle = direction ? (Math.PI / 4) * delta : 0;
 
-    hookAssembly.children[2].rotation.x += angle;
-    hookAssembly.children[3].rotation.x += angle;
-    hookAssembly.children[4].rotation.x -= angle;
-    hookAssembly.children[5].rotation.x -= angle;
+    if (hookAssembly.children[2].rotation.x >= (Math.PI / 2) || hookAssembly.children[2].rotation.x == 0) {
+        return;
+    } else {
 
-    hookAssembly.children[2].rotation.z += angle;
-    hookAssembly.children[3].rotation.z -= angle;
-    hookAssembly.children[4].rotation.z += angle;
-    hookAssembly.children[5].rotation.z -= angle;
+        var angle = direction ? (Math.PI / 4) * delta : -1 * (Math.PI / 4) * delta;
+
+        hookAssembly.children[2].rotation.x += angle;
+        hookAssembly.children[3].rotation.x += angle;
+        hookAssembly.children[4].rotation.x -= angle;
+        hookAssembly.children[5].rotation.x -= angle;
+
+        hookAssembly.children[2].rotation.z += angle;
+        hookAssembly.children[3].rotation.z -= angle;
+        hookAssembly.children[4].rotation.z += angle;
+        hookAssembly.children[5].rotation.z -= angle;
+    }
 }
 
 ////////////////
@@ -869,21 +885,36 @@ function createHUD() {
     // Create HUD element
     var hudElement = document.createElement('div');
     hudElement.setAttribute('id', 'hud');
-
-    keys = ['Q', 'A', 'W', 'S', 'E', 'D', 'R', 'F'];
     document.body.appendChild(hudElement);
+
+    var numKeysRow = document.createElement('div');
+    numKeysRow.setAttribute('id', 'numKeysRow');
+    hudElement.appendChild(numKeysRow);
+
+    numKeys = ['1', '2', '3', '4', '5', '6', '7'];
+    keys = ['Q', 'A', 'W', 'S', 'E', 'D', 'R', 'F'];
+
     var keyRow1 = document.createElement('div');
     var keyRow2 = document.createElement('div');
     hudElement.appendChild(keyRow1);
     hudElement.appendChild(keyRow2);
+
+    var keyElement;
+    for (let index = 0; index < 7; index++) {
+        keyElement = document.createElement('span');
+        keyElement.setAttribute('id', numKeys[index]);
+        keyElement.innerHTML = numKeys[index];
+        numKeysRow.appendChild(keyElement);
+    }
+
     for (let index = 0; index < 8; index += 2) {
-        var keyElement = document.createElement('span');
+        keyElement = document.createElement('span');
         keyElement.setAttribute('id', keys[index]);
         keyElement.innerHTML = keys[index];
         keyRow1.appendChild(keyElement);
     }
     for (let index = 1; index < 8; index += 2) {
-        var keyElement = document.createElement('span');
+        keyElement = document.createElement('span');
         keyElement.setAttribute('id', keys[index]);
         keyElement.innerHTML = keys[index];
         keyRow2.appendChild(keyElement);
@@ -897,27 +928,45 @@ function onKeyDown(e) {
     switch (e.keyCode) {
         case 49: //1
             activeCamera = frontCamera;
+            prevKey = activeKey;
+            activeKey = 1;
             break;
         case 50: //2
             activeCamera = sideCamera;
+            prevKey = activeKey;
+            activeKey = 2;
             break;
         case 51: //3
             activeCamera = topCamera;
+            prevKey = activeKey;
+            activeKey = 3;
             break;
         case 52: //4
             activeCamera = orthographicCamera;
+            prevKey = activeKey;
+            activeKey = 4;
             break;
         case 53: //5
             activeCamera = perspectiveCamera;
+            prevKey = activeKey;
+            activeKey = 5;
             break;
         case 54: //6
             activeCamera = mobileCamera;
+            prevKey = activeKey;
+            activeKey = 6;
             break;
         case 55: //7
+
             for (var key in materials) {
                 if (materials.hasOwnProperty(key)) {
                     materials[key].wireframe = !materials[key].wireframe;
                 }
+            }
+            if (key7) {
+                key7 = false;
+            } else {
+                key7 = true;
             }
             break;
         case 81: // q for crane rotation

@@ -24,10 +24,10 @@ body {
 }
 
 #hud div span {
-    width: 100px;
-    height: 100px;
+    width: 50px;
+    height: 50px;
     border: 1px solid black;
-    font: 50px Arial, sans-serif;
+    font: 25px Arial, sans-serif;
     text-align: center;
 }
 
